@@ -57,7 +57,7 @@ class observer {
          $proctorclosesessionparams = [
         'session_id_or_external' => $sessionid,
         'organization_id' => 44,
-        'key_id' => '',
+        'key_id' => 'KEY-93781AC',
     ];
     $proctorcurl = new curl();
     $proctorcurl->setHeader('Content-Type: application/json');
