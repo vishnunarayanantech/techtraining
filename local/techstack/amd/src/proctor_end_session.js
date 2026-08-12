@@ -1,0 +1,156 @@
+// This file is part of Moodle - https://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
+
+/**
+ * Ends the external proctoring session when the student confirms "Submit all
+ * and finish" on the quiz summary page.
+ *
+ * @module     local_techstack/proctor_end_session
+ * @copyright  2026 Techversant
+ * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+define(['require'], function(require) {
+
+    var CLOSE_SESSION_API_URL = 'https://proctoring.api.techversantinfotech.com/proctor-client/session/close';
+console.log('eflag ~ proctor_end_session.js loaded');
+alert("ending js")
+    /**
+     * Same URL-building approach as local_techstack/proctor_widget - kept as
+     * a separate copy here rather than a shared dependency, since
+     * proctor_widget.js is left untouched on purpose.
+     *
+     * @param {Object} params
+     * @return {String}
+     */
+   
+
+    /**
+     * Notify the proctoring backend the session is over, then let the
+     * widget's own client do any local cleanup. Mirrors the reference
+     * executeEndSession() implementation: only checks response.ok, doesn't
+     * block the real Moodle quiz submission that's happening in parallel.
+     *
+     * @param {Object} closeSessionParams - {session_id_or_external, organization_id, key_id}
+     */
+    var executeEndSession = async function(closeSessionParams) {
+        // if (
+        //     window.proctorClient &&
+        //     typeof window.proctorClient.endSession === 'function'
+        // ) {
+        //     var response = await fetch(CLOSE_SESSION_API_URL, {
+        //         method: 'POST',
+        //         headers: {'Content-Type': 'application/json'},
+        //         body: JSON.stringify({
+        //             session_id_or_external: closeSessionParams.session_id_or_external || null,
+        //             organization_id: closeSessionParams.organization_id || null,
+        //             key_id: closeSessionParams.key_id || null,
+        //         })
+        //     });
+
+        //     if (!response.ok) {
+        //         alert('Failed to notify server of session end.');
+        //         return;
+        //     }
+
+        //     window.proctorClient.endSession('proctor-widget-root');
+        // } else {
+        //     alert('proctorClient.endSession not found — cannot end session.');
+        // }
+         alert("before console log")
+      try {
+    console.log("Before fetch");
+
+    const response = await fetch(
+        'https://proctoring.api.techversantinfotech.com/proctor-client/session/close',
+        {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                session_id_or_external: closeSessionParams.session_id_or_external || null,
+                organization_id: closeSessionParams.organization_id || null,
+                key_id: closeSessionParams.key_id || null,
+            })
+        }
+    );
+
+    console.log("After fetch");
+    console.log(response);
+
+    const text = await response.text();
+    console.log(text);
+
+} catch (err) {
+    console.error("Fetch error:", err);
+}
+           
+            console.log('eflag ~ executeEndSession response', response);
+    };
+
+    /**
+     * True if the clicked element is the confirm button inside quiz's own
+     * "Submit all your answers and finish?" modal (core Moodle modal, not
+     * something this codebase builds - matched by title text rather than
+     * just data-action="save", since that attribute isn't unique to this
+     * one modal).
+     *
+     * @param {Element} target
+     * @return {Boolean}
+     */
+    var isSummaryConfirmButton = function(target) {
+        var btn = target.closest('button[data-action="save"]');
+        if (!btn) {
+            return false;
+        }
+        var modal = btn.closest('[data-region="modal-container"]');
+        if (!modal) {
+            return false;
+        }
+        var title = modal.querySelector('[data-region="title"]');
+        return !!(title && title.textContent.indexOf('Submit all your answers and finish') !== -1);
+    };
+
+    return {
+        /**
+         * Entry point, called via $PAGE->requires->js_call_amd() on
+         * mod/quiz/summary.php.
+         *
+         * Loads the same proctor bundle as the attempt page (via require(),
+         * same reasoning as local_techstack/proctor_widget - no window.define
+         * hiding, no iframe) purely to get a client object with .endSession -
+         * this page never calls .init() so the wizard UI never mounts here.
+         * Listens (event delegation, since the modal is added to the DOM
+         * later by core) for the confirm click inside quiz's own submit
+         * confirmation modal, and fires the end-session notification
+         * alongside - without blocking - the real form submission.
+         *
+         * @param {Object} widgetParams - same shape as proctor_widget's params, used only to load the bundle.
+         * @param {Object} closeSessionParams - {session_id_or_external, organization_id, key_id} for the close API.
+         */
+        init: function(widgetParams, closeSessionParams) {
+            
+
+          
+
+            document.addEventListener('click', function(e) {
+                if (isSummaryConfirmButton(e.target)) {
+                    alert("ending session: " + JSON.stringify(widgetParams));
+                    executeEndSession(widgetParams);
+                }
+            });
+        }
+    };
+});

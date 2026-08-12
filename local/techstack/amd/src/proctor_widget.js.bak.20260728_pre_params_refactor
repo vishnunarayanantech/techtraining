@@ -1,0 +1,111 @@
+// This file is part of Moodle - https://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
+
+/**
+ * Loads the external proctoring widget bundle on the quiz attempt page.
+ *
+ * @module     local_techstack/proctor_widget
+ * @copyright  2026 Techversant
+ * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+define([], function() {
+
+    /**
+     * Build the CloudFront entry URL, with the session params base64-encoded
+     * into the query string the same way the previous inline script did.
+     *
+     * @return {String}
+     */
+    var buildScriptUrl = function() {
+        var params = {
+            key_id: 'KEY-DEV001',
+            session_id: 'demo',
+            organization_id: 1,
+            course_id: 10,
+            course_name: 'Test Course',
+            user_id: 4237176,
+            first_name: 'Test',
+            last_name: 'User',
+            email_id: 'jerin@techversantinfo.com',
+            redirect_url: 'https://tech-training.demoserver.work/',
+            user_name: 'testuser'
+        };
+        var base64str = window.btoa(JSON.stringify(params));
+        var entry = 'https://dedylcfq70vm0.cloudfront.net/';
+        return entry + '?data=' + base64str;
+    };
+
+    /**
+     * Moodle's own RequireJS exposes a global AMD define() on this page. The
+     * proctor bundle is built as UMD and, when it detects define.amd, registers
+     * itself as an anonymous AMD module instead of attaching to
+     * window.proctorClient - so it used to load successfully but proctorClient
+     * was never set.
+     *
+     * Loading it inside a fresh, same-origin blank iframe gives it a realm with
+     * no RequireJS at all, so its UMD guard falls through to the plain
+     * global-attach branch - without ever touching the host page's own
+     * define(). (Temporarily nulling window.define on the host page was tried
+     * first and reverted: it raced with Moodle's own concurrent AMD module
+     * loading and broke unrelated core modules like core_question/question_engine.)
+     *
+     * @param {String} scriptUrl
+     */
+    var loadInIsolatedFrame = function(scriptUrl) {
+        var frame = document.createElement('iframe');
+        frame.setAttribute('allow', 'camera; microphone; display-capture');
+        frame.style.border = 'none';
+        frame.style.position = 'fixed';
+        frame.style.top = '0';
+        frame.style.left = '0';
+        frame.style.width = '100%';
+        frame.style.height = '100%';
+        frame.style.zIndex = '999999';
+        document.body.appendChild(frame);
+
+        var frameDoc = frame.contentDocument;
+        var root = frameDoc.createElement('div');
+        root.id = 'proctor-widget-root';
+        frameDoc.body.appendChild(root);
+
+        var s = frameDoc.createElement('script');
+        s.type = 'module';
+        s.src = scriptUrl;
+        s.crossOrigin = 'anonymous';
+        s.onload = function() {
+            var proctorClient = frame.contentWindow.proctorClient;
+            window.console.log('[host] Initializing widget...');
+            if (proctorClient && typeof proctorClient.init === 'function') {
+                proctorClient.init('proctor-widget-root');
+            } else {
+                window.alert('proctorClient.init not found — check your bundle export.');
+            }
+            window.console.log('[host] Widget initialization complete.');
+        };
+        s.onerror = function(e) {
+            window.console.error('eflag ~ Failed to load proctoring client:', e);
+        };
+        frameDoc.head.appendChild(s);
+    };
+
+    return {
+        /**
+         * Entry point, called via $PAGE->requires->js_call_amd().
+         */
+        init: function() {
+            loadInIsolatedFrame(buildScriptUrl());
+        }
+    };
+});

@@ -1,0 +1,84 @@
+@import url(https://fonts.googleapis.com/css?family=Nunito:300,400,700);
+
+// Bootstrap
+.kopere_dashboard_div,
+.kopere-dashboard-bootstrap_page {
+    @import "assets/css/bootstrap";
+}
+.kopere_dashboard_div {
+    color: #3a3a3a;
+    margin: -1px -12px;
+    .table {
+        color: rgba(0, 0, 0, 0.9);
+        th {
+            color: rgba(58, 58, 58, 0.95);
+            &:hover {
+                color: #3a3a3a;
+            }
+        }
+        td {
+            &:hover {
+                color: #3a3a3a;
+            }
+        }
+    }
+    @import "assets/css/dashboard";
+    @import "assets/dataTables/jquery.dataTables";
+    @import "assets/dropzone/css/dropzone";
+    @import "assets/css/iosCheckbox";
+    @import "assets/css/daterangepicker";
+    @import "assets/css/css_alert";
+    .breadcrumb {
+        display: none !important;
+    }
+    .element-header {
+        .setting {
+            display: inline-block;
+            float: right;
+            margin-left: 14px;
+            img {
+                width: 25px;
+                height: 25px;
+            }
+        }
+        .help {
+            font-size: 14px;
+            float: right;
+            line-height: 2.3;
+        }
+    }
+    .content-w {
+        //background: transparent !important;
+        border-radius: 6px;
+        .content-i .content-box {
+            padding: 12px !important;
+        }
+    }
+    .menu-kopere {
+        padding: 0 !important;
+    }
+    .submenu-kopere li {
+        list-style: none !important;
+    }
+}
+.kopere_dashboard_modal_item {
+    color: #3a3a3a;
+    .modal-header {
+        display: block !important;
+    }
+    .close {
+        height: 27px;
+        width: 27px;
+        text-align: center;
+    }
+}
+
+.kopere-dashboard {
+    @import "assets/css/botao-add";
+}
+@import "assets/css/statics-pages";
+
+// print
+@import "assets/css/print";
+
+@import "assets/css/dark-mode";

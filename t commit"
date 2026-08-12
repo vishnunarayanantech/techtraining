@@ -1,0 +1,55 @@
+[1mdiff --git a/README.md b/README.md[m
+[1mnew file mode 100755[m
+[1mindex 0000000..12b548b[m
+[1m--- /dev/null[m
+[1m+++ b/README.md[m
+[36m@@ -0,0 +1,49 @@[m
+[32m+[m[32m# Moodle[m
+[32m+[m
+[32m+[m[32m<p align="center"><a href="https://moodle.org" target="_blank" title="Moodle Website">[m
+[32m+[m[32m  <img src="https://raw.githubusercontent.com/moodle/moodle/main/.github/moodlelogo.svg" alt="The Moodle Logo">[m
+[32m+[m[32m</a></p>[m
+[32m+[m
+[32m+[m[32m[Moodle][1] is the World's Open Source Learning Platform, widely used around the world by countless universities, schools, companies, and all manner of organisations and individuals.[m
+[32m+[m
+[32m+[m[32mMoodle is designed to allow educators, administrators and learners to create personalised learning environments with a single robust, secure and integrated system.[m
+[32m+[m
+[32m+[m[32m## Documentation[m
+[32m+[m
+[32m+[m[32m- Read our [User documentation][3][m
+[32m+[m[32m- Discover our [developer documentation][5][m
+[32m+[m[32m- Take a look at our [demo site][4][m
+[32m+[m
+[32m+[m[32m## Community[m
+[32m+[m
+[32m+[m[32m[moodle.org][1] is the central hub for the Moodle Community, with spaces for educators, administrators and developers to meet and work together.[m
+[32m+[m
+[32m+[m[32mYou may also be interested in:[m
+[32m+[m
+[32m+[m[32m- attending a [Moodle Moot][6][m
+[32m+[m[32m- our regular series of [developer meetings][7][m
+[32m+[m[32m- the [Moodle User Association][8][m
+[32m+[m
+[32m+[m[32m## Installation and hosting[m
+[32m+[m
+[32m+[m[32mMoodle is Free, and Open Source software. You can easily [download Moodle][9] and run it on your own web server, however you may prefer to work with one of our experienced [Moodle Partners][10].[m
+[32m+[m
+[32m+[m[32mMoodle also offers hosting through both [MoodleCloud][11], and our [partner network][10].[m
+[32m+[m
+[32m+[m[32m## License[m
+[32m+[m
+[32m+[m[32mMoodle is provided freely as open source software, under version 3 of the GNU General Public License. For more information on our license see[m
+[32m+[m
+[32m+[m[32m[1]: https://moodle.org[m
+[32m+[m[32m[2]: https://moodle.com[m
+[32m+[m[32m[3]: https://docs.moodle.org/[m
+[32m+[m[32m[4]: https://sandbox.moodledemo.net/[m
+[32m+[m[32m[5]: https://moodledev.io[m
+[32m+[m[32m[6]: https://moodle.com/events/mootglobal/[m
+[32m+[m[32m[7]: https://moodledev.io/general/community/meetings[m
+[32m+[m[32m[8]: https://moodleassociation.org/[m
+[32m+[m[32m[9]: https://download.moodle.org[m
+[32m+[m[32m[10]: https://moodle.com/partners[m
+[32m+[m[32m[11]: https://moodle.com/cloud[m
+[32m+[m[32m[12]: https://moodledev.io/general/license[m
+[32m+[m[32m# techtraining[m

@@ -1,0 +1,27 @@
+#page .block {
+    border: none;
+    border-top: 2px solid $primary;
+}
+
+//Admin Blocks
+#side-admin-blocks {
+    width: 100%;
+    background: rgba($primary, 0.2);
+
+    #block-region-side-admin {
+        min-height: 150px;
+        height: 100%;
+        width: 100%;
+    }
+    .card {
+        border-top-color: $primary;
+    }
+}
+
+#region-main.has-blocks .dashboard-card-deck .dashboard-card {
+    box-shadow: 0 0 7px #a3a5ae;
+    transition: all ease-in 300ms;
+    &:hover {
+        box-shadow: 0 0 3px #bbbdc7;
+    }
+}

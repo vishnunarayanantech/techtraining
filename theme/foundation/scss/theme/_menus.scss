@@ -1,0 +1,132 @@
+.context-header-settings-menu a.dropdown-toggle {
+    @if $navbar-style == light {
+        color: $navbar-light-color;
+    }
+    @else {
+        color: $navbar-dark-color;
+    }
+    @include hover-focus() {
+        @if $navbar-style == light {
+            color: $navbar-light-hover-color;
+        }
+        @else {
+            color: $navbar-dark-hover-color;
+        }
+    }
+}
+
+.dropdown-menu,
+.popover-region-container {
+    background-color: $body-bg;
+}
+
+.navbar .dropdown-item {
+    padding: 0.25rem 0.5rem;
+}
+
+.dropdown-item,
+.dropdown-item a,
+.popover-region-container {
+    background-color: $body-bg;
+    color: $body-color;
+}
+
+.dropdown-item:hover,
+.dropdown-item:focus,
+.dropdown-item:focus-within,
+.dropdown-item:active,
+.dropdown-item.active {
+    @include gradient-bg($primary);
+    @if $navbar-style == light {
+        color: $navbar-light-hover-color;
+    }
+    @else {
+        color: $navbar-dark-hover-color;
+    }
+    a {
+        @include gradient-bg($primary);
+        @if $navbar-style == light {
+            color: $navbar-light-hover-color;
+        }
+        @else {
+            color: $navbar-dark-hover-color;
+        }
+    }
+}
+
+.navbar .navbar-nav {
+    ul.dropdown-menu li > ul {
+        border: none;
+        display: block;
+        margin-left: 10px;
+        position: static;
+    }
+}
+
+// Bootstrap hides/shows dropdowns onclick via the class 'show'.
+.dropdown-menu.show {
+    display: block !important; // SHAME - using important as this seems to be overwriten elsewhere.
+    position: absolute;
+}
+
+.popover-region-container {
+    height: auto;
+    max-height: 500px;
+}
+
+[data-region="right-hand-drawer"].drawer {
+    height: calc(100% - 50px);
+    top: 50px;
+}
+
+// Navbar fixed-bottom or not there.
+.navbar-bottom,
+.no-navbar {
+    [data-region="right-hand-drawer"].drawer {
+        height: 100%;
+        top: 0;
+    }
+}
+
+.navbar-bottom .navbar {
+    .dropdown-menu {
+        bottom: 100%;
+        top: auto;
+    }
+    .usermenu .dropdown-menu,
+    .navbar-nav .context-header-settings-menu .dropdown-menu {
+        top: auto;
+    }
+    .popover-region-container {
+        bottom: 50px;
+        top: auto;
+    }
+
+    .popover-region-toggle {
+        &::before {
+            border-bottom: none;
+            border-top: 10px solid #ddd;
+            bottom: auto;
+            top: -18px;
+        }
+
+        &::after {
+            border-bottom: none;
+            border-top: 9px solid #fff;
+            bottom: auto;
+            top: -19px;
+        }
+    }
+}
+
+.favi {
+    .dropdown-item[aria-current="true"]:before,
+    .dropdown-toggle::after {
+        font-family: 'Font Awesome 6 Free';
+        font-weight: 900;
+    }
+}
+
+.dropdown-menu {
+    margin: auto;
+}

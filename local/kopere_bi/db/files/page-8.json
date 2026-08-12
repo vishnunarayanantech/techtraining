@@ -1,0 +1,105 @@
+{
+  "title": "lang::report_dashboard_page_1_title::local_kopere_bi",
+  "description": "",
+  "user_id": null,
+  "refkey": "dashboard",
+  "category": {
+    "refkey": "dashboard",
+    "title": "lang::report_dashboard_cat_title::local_kopere_bi",
+    "description": ""
+  },
+  "blocks": [
+    {
+      "refkey": "dashboard-1",
+      "type": "block-3",
+      "sequence": 1,
+      "elements": [
+        {
+          "title": "lang::report_dashboard_page_1_users::local_kopere_bi",
+          "refkey": "report_dashboard_page_1_users",
+          "block_num": 1,
+          "type": "info",
+          "theme": "blue",
+          "css": "",
+          "html_before": "",
+          "html_after": "",
+          "commandsql": "SELECT CONCAT(\r\n    (SELECT count(*) AS num FROM mdl_user WHERE id > 1 AND deleted = 0),\r\n    ' \/ ',\r\n    (SELECT count(*) AS num FROM mdl_user WHERE id > 1 AND deleted = 0 AND lastaccess > 0)\r\n)",
+          "cache": "1h",
+          "reload": "none",
+          "info": "[]"
+        },
+        {
+          "title": "lang::report_dashboard_page_1_online::local_kopere_bi",
+          "refkey": "report_dashboard_page_1_online",
+          "block_num": 2,
+          "type": "info",
+          "theme": "green",
+          "css": "",
+          "html_before": "",
+          "html_after": "",
+          "commandsql": "SELECT CONCAT(\r\n    (\r\n         SELECT count(id)\r\n           FROM mdl_user\r\n          WHERE lastaccess > UNIX_TIMESTAMP() - 300\r\n       GROUP BY id\r\n    ),\r\n    ' \/ ',\r\n    (\r\n        SELECT count(id)\r\n          FROM mdl_user\r\n         WHERE lastaccess > UNIX_TIMESTAMP() - 3600\r\n      GROUP BY id\r\n    )\r\n)",
+          "cache": "1h",
+          "reload": "none",
+          "info": "[]"
+        },
+        {
+          "title": "lang::report_dashboard_page_1_cursos::local_kopere_bi",
+          "refkey": "report_dashboard_page_1_cursos",
+          "block_num": 3,
+          "type": "info",
+          "theme": "orange",
+          "css": "",
+          "html_before": "",
+          "html_after": "",
+          "commandsql": "SELECT CONCAT(\r\n    (\r\n        SELECT count(*) FROM mdl_course WHERE id > 1\r\n    ),\r\n    ' \/ ',\r\n    (\r\n        SELECT count(*) FROM mdl_course WHERE id > 1 AND visible = 1\r\n    )\r\n)",
+          "cache": "1h",
+          "reload": "none",
+          "info": "[]"
+        }
+      ]
+    },
+    {
+      "refkey": "dashboard-2",
+      "type": "block-1",
+      "sequence": 2,
+      "elements": [
+        {
+          "title": "lang::report_4_enrolpercourse::local_kopere_bi",
+          "refkey": "report_4_enrolpercourse",
+          "block_num": 1,
+          "type": "line",
+          "theme": "light",
+          "css": "",
+          "html_before": "",
+          "html_after": "",
+          "commandsql": "SELECT c.fullname,\r\n       SUM(CASE \r\n               WHEN ue.status = 0 AND (ue.timeend = 0 OR ue.timeend > UNIX_TIMESTAMP()) THEN 1\r\n               ELSE 0\r\n           END) AS 'lang::active_enrolments::local_kopere_bi',\r\n       SUM(CASE \r\n               WHEN ue.status = 1 THEN 1\r\n               ELSE 0\r\n           END) AS 'lang::inactive_enrolments::local_kopere_bi',\r\n       SUM(CASE \r\n               WHEN ue.status = 0 AND ue.timeend > 0 AND ue.timeend < UNIX_TIMESTAMP() THEN 1\r\n               ELSE 0\r\n           END) AS 'lang::expired_enrolments::local_kopere_bi'\r\nFROM mdl_course c\r\nJOIN mdl_enrol e ON e.courseid = c.id\r\nJOIN mdl_user_enrolments ue ON ue.enrolid = e.id\r\nGROUP BY c.id\r\nORDER BY c.fullname",
+          "cache": "1h",
+          "reload": "none",
+          "info": "{\n    \"chart_options\": \"{\\r\\n    stroke : {\\r\\n        colors : [\\\"#2E93fA\\\", \\\"#66DA26\\\", \\\"#546E7A\\\", \\\"#E91E63\\\", \\\"#FF9800\\\"]\\r\\n    },\\r\\n    yaxis : {\\r\\n        labels : {\\r\\n            formatter: (value) => { return value },\\r\\n        },\\r\\n    },\\r\\n}\"\n}"
+        }
+      ]
+    },
+    {
+      "refkey": "dashboard-3",
+      "type": "block-1",
+      "sequence": 3,
+      "elements": [
+        {
+          "pre_requisit": "mysql",
+          "title": "lang::report_dashboard_page_1_newusers::local_kopere_bi",
+          "refkey": "report_dashboard_page_1_newusers",
+          "block_num": 1,
+          "type": "line",
+          "theme": "light",
+          "css": "",
+          "html_before": "",
+          "html_after": "",
+          "commandsql": "  SELECT FROM_UNIXTIME(timecreated, '%m\/%Y') AS yearmonth,\r\n         COUNT(id) AS 'lang::num_user::local_kopere_bi'\r\n    FROM mdl_user\r\n   WHERE deleted = 0\r\n     AND confirmed = 1\r\n     AND timecreated >= UNIX_TIMESTAMP(DATE_SUB(CURDATE(), INTERVAL 12 MONTH))\r\nGROUP BY yearmonth\r\nORDER BY yearmonth DESC",
+          "cache": "none",
+          "reload": "none",
+          "info": "{\n    \"chart_options\": \"{\\r\\n    stroke : {\\r\\n        colors : [\\\"#2E93fA\\\", \\\"#66DA26\\\", \\\"#546E7A\\\", \\\"#E91E63\\\", \\\"#FF9800\\\"]\\r\\n    },\\r\\n    yaxis : {\\r\\n        labels : {\\r\\n            formatter: (value) => { return value },\\r\\n        },\\r\\n    },\\r\\n}\"\n}"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+.form-autocomplete-suggestions {
+    background-color: $body-bg;
+    color: $body-color;
+    li {
+        &:hover,
+        &:focus,
+        &[aria-selected="true"] {
+            @include gradient-bg($primary);
+            @if $navbar-style == light {
+                color: $navbar-light-hover-color;
+            }
+            @else {
+                color: $navbar-dark-hover-color;
+            }
+        }
+    }
+}

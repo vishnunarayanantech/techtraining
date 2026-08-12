@@ -1,0 +1,182 @@
+// MDL-57305 - thanks to Daniel Miericke.
+.block {
+    .block-action {
+        @include fa-icon();
+        cursor: pointer;
+        float: right;
+        &:before {
+            content: "#{$fa-var-compress}";
+            font: normal normal 900 14px/1 'Font Awesome 6 Free';
+        }
+    }
+    &.hidden {
+        .block-action:before {
+            content: "#{$fa-var-expand}";
+        }
+        .card-text {
+            display: none;
+        }
+    }
+
+    .card-body {
+        padding: 0;
+    }
+
+    .card-title {
+        margin-bottom: 0.5rem;
+    }
+}
+
+.block-controls {
+    .action-menu-item {
+        padding: $btn-padding-y 0;
+    }
+    .menubar {
+        justify-content: space-between;
+    }
+}
+
+.hblocks.editing .card {
+    margin: 0 15px;
+}
+
+.hblocks.editing.bpr-1 .card {
+    width: calc(100% - 30px);
+}
+.hblocks.editing.bpr-2 .card {
+    width: calc(50% - 30px);
+}
+.hblocks.editing.bpr-3 .card {
+    width: calc(33.3333333333% - 30px);
+}
+.hblocks.editing.bpr-4 .card {
+    width: calc(25% - 30px);
+}
+.hblocks.editing.bpr-6 .card {
+    width: calc(16.6666666667% - 30px);
+}
+
+[data-region="blocks-drawer"] {
+    height: calc(100% - 50px);
+    left: 0;
+    margin-top: 0.5rem;
+    overflow-y: auto;
+    padding-left: $grid-gutter-width * .5;
+    padding-right: $grid-gutter-width * .5;
+    position: fixed;
+    top: 50px;
+    transition: all 0.75s;
+    width: 360px;
+    &.drawer-hidden {
+        left: -360px;
+    }
+
+    .card-title {
+        padding-left: 0.5rem;
+    }
+}
+
+@include media-breakpoint-down(sm) {
+    [data-region="blocks-drawer"] {
+        background-color: $card-bg;
+        padding: 5px 5px 0 5px;
+        width: 100%;
+        &.drawer-hidden {
+            width: 0;
+        }
+    }
+}
+
+@include media-breakpoint-up(md) {
+    .drawer-open {
+        margin-left: 360px;
+    }
+}
+
+// Navbar fixed-bottom or not there.
+.navbar-bottom,
+.no-navbar {
+    [data-region="blocks-drawer"] {
+        top: 0;
+    }
+}
+
+.dashboard-card-deck.one-row {
+    overflow-x: auto;
+}
+
+body {
+    transition: margin-left 0.75s;
+}
+
+.editing aside.block-region {
+    height: 100%; // For a drag and drop target area when empty.
+}
+
+@include media-breakpoint-down(xs) {
+    [data-region="blocks-column"] {
+        margin-right: -$grid-gutter-width / 2;
+        width: calc(100% + #{$grid-gutter-width});
+    }
+}
+
+@include media-breakpoint-up(xs) {
+    [data-region="blocks-column"] {
+        margin-bottom: -$grid-gutter-width / 2;
+    }
+}
+
+.block_recentlyaccessedcourses .paging-bar-container {
+    margin-top: 0;
+}
+
+// From Classic and adapted with existing Foundation changes....
+// Settings and Navigation blocks don't render well from default boost.
+.block_navigation,
+.block_settings {
+    .block_tree {
+        .tree_item.branch {
+            margin-left: 6px;
+            padding-left: 0;
+        }
+        p.hasicon {
+            padding-left: 0;
+            margin-left: 0;
+            text-indent: 0;
+            img {
+                margin-left: 3px;
+            }
+        }
+        ul {
+            padding-left: 1rem;
+        }
+
+        [aria-expanded="true"] > p:before {
+            margin-left: 0;
+            margin-right: 4px;
+        }
+    }
+}
+
+.block_navigation .block_tree {
+    .depth_2 ul {
+        margin-left: 0.25rem;
+    }
+}
+
+// Remove left indenting from root nodes to allow sub-nodes to indent correctly.
+.root_node,
+.navigation_node {
+    margin-left: 0 !important; /* stylelint-disable-line declaration-no-important */
+    padding-left: 0 !important; /* stylelint-disable-line declaration-no-important */
+}
+
+.block.block_settings {
+    #settingsnav {
+        padding-top: 0 !important; /* stylelint-disable-line declaration-no-important */
+    }
+}
+
+.courseindex .courseindex-section {
+    border-left: none;
+}

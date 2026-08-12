@@ -1,0 +1,102 @@
+.btn.btn-icon {
+    @include hover-focus {
+        background-color: $primary;
+        color: $body-bg;
+    }
+    &.icon-size-3 {
+        line-height: 36px !important; // stylelint-disable-line declaration-no-important
+    }
+}
+
+.forgetpass .btn {
+    white-space: normal;
+}
+
+.navbarantigravity {
+    .backtotop,
+    .gotobottom {
+        bottom: 0;
+        display: none;
+        left: 0;
+        position: absolute;
+        right: 0;
+        top: 0;
+    }
+
+    .btts,
+    .gtbs {
+        opacity: 0;
+    }
+
+    .bttc {
+        .nav-link {
+            padding: $nav-link-padding-y ($nav-link-padding-y / 2) $nav-link-padding-y $nav-link-padding-y;
+        }
+    }
+    .gtbc {
+        .nav-link {
+            padding: $nav-link-padding-y $nav-link-padding-y $nav-link-padding-y ($nav-link-padding-y / 2);
+        }
+    }
+
+    .antigravity {
+        font-size: 24px;
+        position: relative;
+    }
+}
+
+.navbar .navbarantigravity .nav-link {
+    @include hover-focus {
+        border: none;
+    }
+}
+
+.footerantigravity {
+    box-shadow: 0 0 1px $white;
+    z-index: 4; // Grade report footer.
+
+    .backtotop {
+        right: calc(2% + 29px - #{$footer-antigravity-horizontal-offset}px);
+    }
+
+    .gotobottom {
+        right: calc(2% - #{$footer-antigravity-horizontal-offset}px);
+    }
+
+    button {
+        background-color: rgba(red($primary), green($primary), blue($primary), 0.5);
+        border: none;
+        color: $white;
+        display: none;
+        font-size: 24px;
+        padding: 1px 7px 3px;
+        position: fixed;
+        text-align: center;
+        text-decoration: none;
+        top: calc(84% + #{$footer-antigravity-vertical-offset}px);
+    }
+
+    .favi & {
+        button {
+            padding: 3px 8px 3px;
+        }
+    }
+
+    .favi & {
+        .backtotop {
+            right: calc(2% + 37px - #{$footer-antigravity-horizontal-offset}px);
+        }
+    }
+}
+
+.navbar-bottom .footerantigravity button {
+    top: calc(16% + #{$footer-antigravity-vertical-offset}px);
+}
+
+.hasstickyfooter .footerantigravity button {
+    top: calc(74% + #{$footer-antigravity-vertical-offset}px);
+}
+
+#drawer {
+    padding: .5rem;
+}

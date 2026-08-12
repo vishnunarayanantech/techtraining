@@ -1,0 +1,13 @@
+Ref: https://docs.moodle.org/dev/PHPUnit
+
+composer install
+
+php admin/tool/phpunit/cli/init.php
+
+vendor/bin/phpunit theme/foundation/tests/theme_foundation_privacy_testcase.php
+or
+vendor\bin\phpunit theme/foundation/tests/theme_foundation_privacy_testcase.php
+
+vendor/bin/phpunit --group theme_foundation
+or
+vendor\bin\phpunit --group theme_foundation

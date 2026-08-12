@@ -1,0 +1,77 @@
+.custom-select.jumpmenu {
+    width: auto;
+}
+
+.section {
+    .activity {
+        // The command block for each activity.
+        .actions {
+            .btn {
+                border-width: 0;
+            }
+        }
+    }
+}
+
+.section li.activity.hasinfo {
+    border-bottom-width: 0;
+}
+
+.course-section {
+    .section-item {
+        border-width: 0;
+    }
+}
+
+.course-content ul.topics,
+.course-content ul.weeks {
+    li.section {
+        .summary,
+        .content > .availabilityinfo {
+            margin-left: 13px;
+        }
+    }
+}
+
+.course-content ul.section {
+    padding-left: 0;
+}
+
+.coursebox > .info > .coursename a {
+    background-image: none;
+    padding-left: 0;
+}
+
+.course-content ul li.section.main {
+    border-bottom-width: 0;
+}
+
+.course-hidden .page-header-headings {
+    font-style: italic;
+}
+
+#frontpage-available-course-list,
+#frontpage-course-list,
+.course-search-result {
+    .coursebox {
+        border: none;
+    }
+}
+
+.activity-item:not(.activityinline) {
+    border: none;
+}
+
+.activity-add,
+.block-add {
+    border-style: none;
+}
+
+.course-content ul li.section.main:not(.course-section) {
+    border-bottom: none;
+}
+
+.description .course-description-item {
+    background-color: $card-bg;
+    color: $card-color;
+}

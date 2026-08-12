@@ -1,0 +1,322 @@
+// Navbar.
+.navbar {
+    flex-wrap: nowrap;
+
+    &.fixed-bottom,
+    &.fixed-top {
+        height: 50px;
+    }
+
+    .nav-link {
+        line-height: 1;
+    }
+
+    .popover-region {
+        margin-right: 0;
+    }
+    .popover-region-container {
+        right: -6px;
+        top: 40px;
+    }
+    .popover-region-header-container {
+        height: 30px;
+    }
+    .popover-region-header-container,
+    .popover-region-header-text {
+        line-height: 30px;
+    }
+    .popover-region-toggle {
+        width: auto;
+        .icon {
+            margin-right: 0;
+        }
+    }
+    a .icon {
+        color: inherit !important; // stylelint-disable-line declaration-no-important
+    }
+}
+
+@include media-breakpoint-up(xs) {
+    .navbar {
+        .nav-link {
+            padding-left: 0.5rem;
+            padding-right: 0.5rem;
+        }
+    }
+}
+
+@include media-breakpoint-down(sm) {
+    .navbar {
+        .dropdown-toggle::after {
+            display: none;
+        }
+    }
+}
+
+.navbar-brand {
+    padding-bottom: $nav-link-padding-y;
+    padding-top: $nav-link-padding-y;
+}
+
+.navbar-nav {
+    .dropdown-menu {
+        position: absolute;
+    }
+    .context-header-settings-menu .dropdown-menu {
+        top: 112%;
+    }
+
+    .custom-control-label {
+        &::before {
+            @if $navbar-style == light {
+                background-color: $navbar-light-color;
+            }
+            @else {
+                background-color: $navbar-dark-color;
+            }
+        }
+        &::after {
+            background-color: $primary;
+        }
+    }
+
+    .custom-control-input:checked ~ .custom-control-label {
+        &::before {
+            @if $navbar-style == light {
+                background-color: $navbar-light-color;
+            }
+            @else {
+                background-color: $navbar-dark-color;
+            }
+            border-color: transparent;
+        }
+        &::after {
+            background-color: $primary;
+        }
+    }
+
+    .nav-editswitch {
+        .custom-switch {
+            padding-left: 0;
+            width: 1.75rem;
+            .custom-control-label {
+                &::after {
+                    left: 2px;
+                }
+                &::before {
+                    left: 0;
+                }
+            }
+        }
+        @include hover-focus() {
+            .custom-control-label {
+                &::after {
+                    @if $navbar-style == light {
+                        background-color: $navbar-light-hover-color;
+                    }
+                    @else {
+                        background-color: $navbar-dark-hover-color;
+                    }
+                }
+            }
+
+            .custom-control-input:checked ~ .custom-control-label {
+                &::after {
+                    @if $navbar-style == light {
+                        background-color: $navbar-light-hover-color;
+                    }
+                    @else {
+                        background-color: $navbar-dark-hover-color;
+                    }
+                }
+            }
+        }
+    }
+
+    .usermenu {
+        .userinitials {
+            @if $navbar-style == light {
+                background-color: $navbar-light-color;
+            }
+            @else {
+                background-color: $navbar-dark-color;
+            }
+        }
+        .dropdown-toggle {
+            @include hover-focus() {
+                .userinitials {
+                    @if $navbar-style == light {
+                        background-color: $navbar-light-hover-color;
+                    }
+                    @else {
+                        background-color: $navbar-dark-hover-color;
+                    }
+                }
+            }
+        }
+
+        .dropdown-menu {
+            left: auto;
+            right: 0;
+        }
+    }
+
+    .nav-editswitch {
+        @if $navbar-style == light {
+            color: $navbar-light-color;
+        }
+        @else {
+            color: $navbar-dark-color;
+        }
+        @include hover-focus() {
+            @if $navbar-style == light {
+                color: $navbar-light-hover-color;
+            }
+            @else {
+                color: $navbar-dark-hover-color;
+            }
+        }
+    }
+
+    .logininfo {
+        @if $navbar-style == light {
+            color: $navbar-light-color;
+        }
+        @else {
+            color: $navbar-dark-color;
+        }
+        padding: $nav-link-padding-y $nav-link-padding-x;
+    }
+    .dropdown-menu,
+    .searchform-navbar {
+        a .icon {
+            color: inherit !important; // stylelint-disable-line declaration-no-important
+        }
+    }
+    .simplesearchform .btn {
+        @include hover-focus() {
+            > .icon {
+                color: $body-color !important; // stylelint-disable-line declaration-no-important
+            }
+        }
+    }
+    .dropdown-toggle,
+    .nav-link,
+    .simplesearchform .btn-open {
+        @include hover-focus() {
+            > .icon {
+                @if $navbar-style == light {
+                    color: $navbar-light-hover-color !important; // stylelint-disable-line declaration-no-important
+                }
+                @else {
+                    color: $navbar-dark-hover-color !important; // stylelint-disable-line declaration-no-important
+                }
+            }
+        }
+    }
+}
+
+.nav .caret {
+    margin-left: 0;
+}
+
+.popover-region-toggle {
+    &::after {
+        bottom: -9px;
+        right: 7px;
+    }
+    &::before {
+        bottom: -8px;
+        right: 6px;
+    }
+}
+
+.favi {
+    .navbar-plugin-output .popover-region-toggle {
+        &::after {
+            right: 9px;
+        }
+        &::before {
+            right: 8px;
+        }
+    }
+}
+
+.navbar .nav-item {
+    .popover-region:nth-child(odd) {
+        .nav-link {
+            padding-right: ($nav-link-padding-y / 2);
+        }
+    }
+    .popover-region:nth-child(even) {
+        .nav-link {
+            padding-left: ($nav-link-padding-y / 2);
+        }
+    }
+}
+
+.dropdown-menu .fa {
+    font-size: 16px;
+}
+
+.navbar .context-header-settings-menu {
+    .dropdown-toggle > .icon {
+        font-size: 1.33333em;
+        height: 1.33333em;
+        line-height: 1.33333em;
+    }
+}
+
+@media (min-width: 576px) {
+    .navbar {
+        .context-header-settings-menu,
+        .region-main-settings-menu {
+            height: auto;
+        }
+    }
+}
+
+.usermenu {
+    .login {
+        line-height: $line-height-base;
+        a {
+            color: inherit;
+            &:hover,
+            &:focus {
+                color: inherit;
+            }
+        }
+    }
+
+    .dropdown-toggle {
+        padding-bottom: 0;
+        padding-top: 0;
+
+        img.userpicture {
+            margin-right: 0;
+        }
+    }
+
+    .dropdown-menu {
+        top: unquote("calc(100% + 0.25rem)"); // stylelint-disable-line csstree/validator
+    }
+
+    .userbutton .usertext {
+        vertical-align: middle;
+    }
+}
+
+// fixed-bottom or not there.
+.navbar-bottom,
+.no-navbar {
+    #page {
+        margin-top: 0;
+    }
+}
+
+@include media-breakpoint-down(xs) {
+    .nav.usernav .usermenu .dropdown-toggle {
+        padding-left: 0;
+        padding-right: 0;
+    }
+}

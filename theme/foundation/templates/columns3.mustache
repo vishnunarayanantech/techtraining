@@ -1,0 +1,151 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template theme_foundation/columns3
+
+    Foundation 3 column layout template.
+
+    Context variables required for this template:
+    * sitename - The name of the site.
+    * output - The core renderer for the page.
+    * bodyattributes - attributes for the body tag as a string of html attributes.
+    * drawerblocks - HTML for the drawer blocks.
+    * hasdrawerblocks - true if there are drawer blocks on this page.
+    * sidepreblocks - HTML for the side pre blocks.
+    * haspreblocks - true if there are side pre blocks on this page.
+    * sidepostblocks - HTML for the side post blocks.
+    * haspostblocks - true if there are side post blocks on this page.
+    * regionmainsettingsmenu - HTML for the region main settings menu.
+    * hasregionmainsettingsmenu - There is a region main settings menu on this page.
+
+    Example context (json):
+    {
+        "sitename": "Moodle",
+        "output": {
+            "htmlattributes": "lang='en'",
+            "page_title": "Test page",
+            "favicon": "favicon.ico",
+            "main_content": "<h1>Headings make html validators happier</h1>"
+         },
+        "bodyattributes": "",
+        "nonavbar": false,
+        "drawerblocks": "<h2>Blocks html goes here</h2>",
+        "hasdrawerblocks": true,
+        "drawerclosed": true,
+        "posterblocks": "<h2>Blocks html goes here</h2>",
+        "hasposterblocks": true,
+        "sidepreblocks": "<h2>Blocks html goes here</h2>",
+        "haspreblocks": true,
+        "sidepostblocks": "<h2>Blocks html goes here</h2>",
+        "haspostblocks": true,
+        "regionmainsettingsmenu": "",
+        "hasregionmainsettingsmenu": false
+    }
+}}
+{{> partials/head }}
+
+<body {{{ bodyattributes }}}>
+
+<div id="page-wrapper">
+
+    {{{ output.standard_top_of_body_html }}}
+
+    {{^nonavbar}}
+        {{> partials/navbar}}
+    {{/nonavbar}}
+
+    <div id="page" class="container-fluid">
+        {{{ output.full_header }}}
+
+        {{> partials/alerts}}
+
+        <div id="page-content" class="row{{#haspreblocks}} blocks-pre{{/haspreblocks}}{{#haspostblocks}} blocks-post{{/haspostblocks}} d-print-block pb-sm-3">
+            <div id="region-main-box" class="col-12 region-main">
+                {{#hasregionmainsettingsmenu}}
+                <div id="region-main-settings-menu" class="d-print-none">
+                    {{{ output.region_main_settings_menu }}}
+                </div>
+                {{/hasregionmainsettingsmenu}}
+                {{#secondarymoremenu}}
+                <div class="secondary-navigation">
+                    {{> core/moremenu}}
+                </div>
+                {{/secondarymoremenu}}
+                {{#hasregionmainsettingsmenu}}
+                    <div class="region_main_settings_menu_proxy"></div>
+                {{/hasregionmainsettingsmenu}}
+                <section id="region-main" class="region-main-content mb-3" aria-label="{{#str}}content{{/str}}">
+                    {{{ output.course_content_header }}}
+                    {{> partials/carousel}}
+                    {{> partials/pblocks}}
+                    {{> partials/hblocks}}
+                    {{#headercontent}}
+                        {{> core/activity_header }}
+                    {{/headercontent}}
+                    {{#overflow}}
+                    <div class="container-fluid tertiary-navigation">
+                        <div class="navitem">
+                            {{> core/url_select}}
+                        </div>
+                    </div>
+                    {{/overflow}}
+                    {{{ output.main_content }}}
+                    {{{ output.activity_navigation }}}
+                    {{> partials/ceblocks}}
+                    {{{ output.course_content_footer }}}
+                </section>
+            </div>
+
+            {{#haspreblocks}}
+            <div class="columnpre blockcolumn has-blocks col-12">
+                <section data-region="blocks-column" class="d-print-none" aria-label="{{#str}}blocks{{/str}}">
+                    {{{ sidepreblocks }}}
+                </section>
+            </div>
+            {{/haspreblocks}}
+
+            {{#haspostblocks}}
+            <div class="columnpost blockcolumn has-blocks col-12">
+                <section data-region="blocks-column" class="d-print-none" aria-label="{{#str}}blocks{{/str}}">
+                    {{{ sidepostblocks }}}
+                </section>
+            </div>
+            {{/haspostblocks}}
+        </div>
+    </div>
+
+    {{> partials/drawerblocks}}
+
+    {{{ output.standard_after_main_region_html }}}
+    {{^nofooter}}
+        {{> partials/footer }}
+    {{/nofooter}}
+</div>
+
+</body>
+</html>
+{{#js}}
+M.util.js_pending('theme_boost/loader');
+require(['theme_boost/loader'], function() {
+  M.util.js_complete('theme_boost/loader');
+});
+{{#hasdrawerblocks}}
+require(['theme_foundation/drawer'], function (Drawer) {
+    Drawer.drawerInit();
+});
+{{/hasdrawerblocks}}
+{{/js}}

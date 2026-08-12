@@ -1,0 +1,45 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template theme_foundation/partials/alerts
+
+    Alerts.
+
+    Context variables required for this template:
+    * thealerts - Array of alerts if any.
+
+    Example context (json):
+    {
+        "thealerts": [
+            {"alerttype":"info", "alerttitle":"Tab 1", "alerttext":"<p>Alert one.</p>"},
+            {"alerttype":"warning", "alerttitle":"Tab 2", "alerttext":"<p>Alert two.</p>"},
+            {"alerttype":"primary", "alerttitle":"Tab 3", "alerttext":"<p>Alert three.</p>"}
+        ]
+    }
+}}
+{{#thealerts}}
+<div class="alert alert-{{alerttype}} alert-dismissible fade show" role="alert">
+    {{#alerttitle}}
+    <h4 class="alert-heading">{{alerttitle}}</h4>
+    <hr>
+    {{/alerttitle}}
+    <div class="mb-0">{{{alerttext}}}</div>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span class="fa fa-times" aria-hidden="true"></span>
+    </button>
+</div>
+{{/thealerts}}

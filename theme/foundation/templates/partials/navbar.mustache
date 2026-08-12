@@ -1,0 +1,133 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template theme_foundation/partials/navbar
+
+    Page navbar.
+
+    Context variables required for this template:
+    * sitename - The name of the site.
+    * output - The core renderer for the page.
+    * config - The config instance.
+    * hasdrawerblocks - true if there are drawer blocks on this page.
+    * drawerclosed - true if the drawer is closed on this page.
+    * navbarposition - Position of the navbar on the page.
+    * navbarstyle - Style.
+    * fa - true if using Font Awesome 4.
+    * fav - true if using Font Awesome 5.
+    * favi - true if using Font Awesome 6.
+
+    Example context (json):
+    {
+        "sitename": "Moodle",
+        "output": "",
+        "config": "",
+        "hasdrawerblocks": true,
+        "drawerclosed": true,
+        "navbarposition": "top",
+        "navbarstyle": "dark",
+        "fa": false,
+        "fav": true,
+        "favi": false
+    }
+}}
+<nav class="fixed-{{navbarposition}} navbar navbar-{{navbarstyle}} bg-primary fg-primary navbar-expand-md moodle-has-zindex" aria-label="{{#str}}sitemenubar, admin{{/str}}">
+    {{> partials/navbardrawerblocks}}
+
+    {{^ltiauth}}
+    <a href="{{{ config.wwwroot }}}"
+    {{/ltiauth}}
+    {{#ltiauth}}
+    <span
+    {{/ltiauth}}
+    class="navbar-brand aabtn nav-link d-none d-sm-flex{{#output.should_display_navbar_logo}} has-logo{{/output.should_display_navbar_logo}}">
+        {{# output.should_display_navbar_logo }}
+        <span class="logo">
+            <img src="{{output.get_compact_logo_url}}" title="{{sitename}}" alt="{{#str}} sitelogo, theme_foundation {{/str}}">
+        </span>
+        {{/ output.should_display_navbar_logo }}
+        {{^ output.should_display_navbar_logo}}
+        <span class="site-name">{{ sitename }}</span>
+        {{/ output.should_display_navbar_logo }}
+    {{^ltiauth}}
+    </a>
+    {{/ltiauth}}
+    {{#ltiauth}}
+    </span>
+    {{/ltiauth}}
+
+    {{#coursesmenu}}
+    <ul class="navbar-nav">
+        <!-- courses_menu -->
+        {{{coursesmenu}}}
+    </ul>
+    {{/coursesmenu}}
+    {{#thiscoursemenu}}
+    <ul class="navbar-nav">
+        <!-- this_course_menu -->
+        {{{thiscoursemenu}}}
+    </ul>
+    {{/thiscoursemenu}}
+    <ul class="navbar-nav d-none d-md-flex">
+        <!-- custom_menu -->
+        {{{ output.custom_menu }}}
+        <!-- page_heading_menu -->
+        {{{ output.page_heading_menu }}}
+    </ul>
+    <!-- primary_menu -->
+    {{{ output.primary_menu }}}
+    <ul class="nav navbar-nav usernav flex-row align-items-center">
+        <!-- lang_menu -->
+        {{{ output.render_lang_menu }}}
+        <li class="d-none d-md-block">
+            <!-- search_box -->
+            {{{ output.search_box }}}
+        </li>
+        <!-- Anti-gravity -->
+        <li class="nav-item">
+            <div class="d-flex navbarantigravity">
+                <div class="bttc antigravity">
+                    <div class="btts nav-link" title="{{#str}}backtotop, theme_foundation{{/str}}"><span aria-hidden="true" class="{{#fa}}fa fa-arrow-circle-o-up{{/fa}}{{#fav}}far fa-arrow-alt-circle-up{{/fav}}{{#favi}}fa-regular fa-arrow-alt-circle-up{{/favi}}"></span></div>
+                    <div class="backtotop nav-link" title="{{#str}}backtotop, theme_foundation{{/str}}"><span aria-hidden="true" class="{{#fa}}fa fa-arrow-circle-o-up{{/fa}}{{#fav}}far fa-arrow-alt-circle-up{{/fav}}{{#favi}}fa-regular fa-arrow-alt-circle-up{{/favi}}"></span></div>
+                </div>
+                <div class="gtbc antigravity">
+                    <div class="gtbs nav-link" title="{{#str}}gotobottom, theme_foundation{{/str}}"><span aria-hidden="true" class="{{#fa}}fa fa-arrow-circle-o-down{{/fa}}{{#fav}}far fa-arrow-alt-circle-down{{/fav}}{{#favi}}fa-regular fa-arrow-alt-circle-down{{/favi}}"></span></div>
+                    <div class="gotobottom nav-link" title="{{#str}}gotobottom, theme_foundation{{/str}}"><span aria-hidden="true" class="{{#fa}}fa fa-arrow-circle-o-down{{/fa}}{{#fav}}far fa-arrow-alt-circle-down{{/fav}}{{#favi}}fa-regular fa-arrow-alt-circle-down{{/favi}}"></span></div>
+                </div>
+            </div>
+        </li>
+        {{#hascontextheadersettingsmenu}}
+        <!-- context_header_settings_menu -->
+        <li class="nav-item context-header-settings-menu">
+            {{{ contextheadersettingsmenu }}}
+        </li>
+        {{/hascontextheadersettingsmenu}}
+        <!-- navbar_plugin_output -->
+        <li class="nav-item navbar-plugin-output">
+            {{{ output.navbar_plugin_output }}}
+        </li>
+        {{#navbareditswitch}}
+        <li class="nav-item nav-editswitch">
+            {{{ navbareditswitch }}}
+        </li>
+        {{/navbareditswitch}}
+        <!-- user_menu -->
+        <li class="nav-item">
+            {{{ output.user_menu }}}
+        </li>
+    </ul>
+</nav>

@@ -1,0 +1,225 @@
+// Login page - left-align login form.
+body#page-login-index {
+
+    .col-xl-6.col-sm-8 {
+        min-width: 100%;
+    }
+
+    #region-main {
+        padding-top: 0;
+        background-color: $white;
+        height: 100vh;
+    }
+
+    #page-wrapper {
+        position: relative;
+        min-height: 100vh;
+        height: auto;
+        .lang-menu .dropdown-menu {
+            left: 0;
+            top: 65px;
+        }
+    }
+
+    #page {
+        padding-top: 0 !important;
+        background: none;
+        #card-login,
+        #card-login-instructions {
+            margin-top: 50px;
+        }
+
+        #region-main-box {
+            padding-top: 0;
+        }
+
+        &.has-navbar {
+            #region-main-box {
+                padding-top: 60px;
+            }
+        }
+    }
+
+    #region-main-box {
+        padding: 0;
+    }
+
+    #page-content {
+        max-width: 550px;
+        margin: if($login-box-align == 'center', 0 auto, 0);
+        margin-left: if($login-box-align == 'left', 0, auto);
+        align-items: if($login-box-align == 'center', center, normal);
+    }
+
+    #page-footer {
+        display: none;
+    }
+
+    .card {
+        @extend %border-frequency;
+    }
+
+    .card-header {
+        background-color: transparent;
+    }
+
+    &.style-image {
+        #page-wrapper {
+            background-image: url($login-backgroundimage);
+            background-position: top center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-attachment: fixed;
+        }
+    }
+
+    &.style-none {
+        #page-wrapper {
+            background-image: none;
+        }
+    }
+
+    .loginform {
+        h1.login-heading {
+            font-size: 1.5rem !important;
+            line-height: 2.5rem;
+            text-align: center;
+            margin: ($spacer * 3) 0 ($spacer * 3) 0;
+            color: $black;
+        }
+
+        .login-identityprovider-btn {
+            background-color: $white !important;
+            border: 1px solid $gray-600 !important;
+            color: $black !important;
+            margin: 0 !important;
+        }
+        .login-identityprovider-btn,
+        .btn-secondary {
+            white-space: normal;
+            height: auto;
+            line-height: 1.3rem;
+            padding: 10px 20px;
+        }
+        .login-form-password .toggle-sensitive-wrapper {
+            input[type="password"] {
+                border-radius: .4rem 0 0 .4rem;
+            }
+            .toggle-sensitive-btn {
+                box-shadow: none;
+            }
+        }
+    }
+
+    .login-wrapper {
+        align-items: normal;
+    }
+
+    .login-container {
+        box-shadow: none;
+    }
+
+    button.btn.btn-link.btn-cookie {
+        text-decoration: $links-decoration;
+    }
+}
+
+body#page-login-signup,
+body#page-login-forgot_password,
+body#page-login-verify_age_location {
+    &.style-image {
+        #page {
+            background: none;
+        }
+
+        #page-wrapper {
+            background-image: url($login-backgroundimage);
+            background-position: top center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-attachment: fixed;
+        }
+    }
+
+    &.style-none {
+        #page {
+            background: none;
+        }
+
+        #page-wrapper {
+            background-image: none;
+        }
+    }
+
+    #page-wrapper {
+        background-attachment: fixed;
+        .lang-menu .dropdown-menu {
+            left: 0;
+            top: 65px;
+        }
+    }
+    #page {
+        z-index: 10;
+        &.has-navbar {
+            #page-content {
+                margin-top: 6rem;
+            }
+        }
+
+        #page-content {
+            background: transparent;
+            @extend %border-frequency;
+            margin-top: 0;
+        }
+
+        .login-heading {
+            margin: 1.5rem 0;
+        }
+
+        .mform.full-width-labels .fitem.row > {
+            .col-md-3 {
+                flex: 0 0 25%;
+                max-width: 25%;
+            }
+
+            .col-md-9 {
+                flex: 0 0 75%;
+                max-width: 75%;
+            }
+        }
+    }
+    .login-container {
+        width: auto !important;
+    }
+    #region-main-box.col-12 {
+        max-width: 800px;
+    }
+    #page-content {
+        width: auto;
+    }
+    .pt-5 {
+        padding-top: 0 !important;
+    }
+}
+
+body#page-login-verify_age_location {
+    #page-content {
+        padding: 3rem 1rem;
+    }
+}
+
+body#page-admin-tool-mfa-auth {
+    #region-main {
+        &:before {
+            content: none;
+        }
+        &:after {
+            content: none;
+        }
+    }
+    @media (min-width: 768px) {
+        .login-container {
+            width: auto !important;
+        }
+    }
+}

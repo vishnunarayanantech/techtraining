@@ -1,0 +1,79 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template theme_trema/mydashboard_admin
+
+    Admin dashboard present in mydashboard layout.
+
+    Context variables required for this template:
+    * disk - size of the Moodledata directory
+    * activecourses - active courses
+    * totalcourses - total number of courses
+    * activeenrolments - enrolments in active courses
+    * enrolments - total enrolments
+    * issuestatus - number of issues
+
+    Example context (json):
+    {
+        "disk": "10GB",
+        "activecourses": 10,
+        "totalcourses": 20,
+        "activeenrolments": 100,
+        "enrolments": 200,
+        "issuestatus": {
+            "warning": 1
+        }
+    }
+}}
+<div id="mydashboard-admin" class="container-fluid">
+    <h2 class="admin-dashboard sr-only">{{#str}}admindashboard, theme_trema{{/str}}</h2>
+    <div class="row">
+        <div class="col-sm-3">
+            <div class="card-body">
+                <i class="fa fa-3x fa-database float-left pr-3"></i>
+                <h3 class="h5 pt-1">{{#str}}diskusage, theme_trema{{/str}}</h3>
+                <p>{{#str}}available, theme_trema{{/str}} {{{disk}}}</p>
+            </div>
+        </div>
+
+        <div class="col-sm-3">
+            <div class="card-body">
+                <i class="fa fa-3x fa-graduation-cap float-left pr-3"></i>
+                <h3 class="h5 pt-1">{{#str}}courses{{/str}}</h3>
+                <p>{{#str}}active{{/str}} {{activecourses}} | {{#str}}total{{/str}} {{totalcourses}}</p>
+            </div>
+        </div>
+
+        <div class="col-sm-3">
+            <div class="card-body">
+                <i class="fa fa-3x fa-users float-left pr-3"></i>
+                <h3 class="h5 pt-1">{{#str}}enrolments, enrol{{/str}}</h3>
+                <p>{{#str}}active{{/str}} {{activeenrolments}} | {{#str}}total{{/str}} {{enrolments}}</p>
+            </div>
+        </div>
+
+        {{#issuestatus.warning}}
+        <div class="col-sm-3">
+            <div class="card-body">
+                <i class="fa fa-3x fa-ambulance float-left pr-3"></i>
+                <h3 class="h5 pt-1"><a href="{{config.wwwroot}}/report/security/index.php">{{#str}}security, admin{{/str}}</a></h3>
+                <p>{{#str}}alert, theme_trema{{/str}} <span class="badge-danger pl-1 pr-1">{{issuestatus.warning}}</span></p>
+            </div>
+        </div>
+        {{/issuestatus.warning}}
+    </div>
+</div>
