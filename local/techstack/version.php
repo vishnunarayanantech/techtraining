@@ -26,6 +26,6 @@ defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'local_techstack';
 $plugin->release = '0.1.0';
-$plugin->version = 2025071527;
+$plugin->version = 2025071535;
 $plugin->requires = 2022112800;
 $plugin->maturity = MATURITY_ALPHA;

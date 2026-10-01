@@ -52,13 +52,17 @@ class before_standard_footer_html_generation {
          * completed this course.
          *
          * If completed, don't load proctoring.
-         */
+	 */
+	if($USER->id == 2)
+	{
+		return;
+	}
         if (self::is_course_completed(
             $userid,
             $courseid
         )) {
             return;
-        }
+	}
 
         /*
          * SAME session ID for:
@@ -115,6 +119,15 @@ class before_standard_footer_html_generation {
 
 global $USER, $COURSE, $CFG;
 
+//global $COURSE, $CFG;
+
+require_once($CFG->dirroot . '/local/techstack/helper.php');
+
+$customtext = local_techstack_get_course_customtext($COURSE->id);
+
+//echo $customtext;exit;
+
+if(!empty($customtext)){
 //$cm = get_coursemodule_from_id('quiz', $cmid, 0, false, MUST_EXIST);
 //$quiz = $DB->get_record('quiz', ['id' => $cm->instance], '*', MUST_EXIST);
 //$ses_key1 = $attemptobj->get_attempt()->id;
@@ -129,9 +142,9 @@ $user_name1 = $USER->username;
  //'key_id' => 'KEY-5E02852',
 
 $proctorwidgetparams = [
-    'key_id' => 'KEY-93781AC',
+    'key_id' => $customtext,
     'session_id' => $sessionid,
-    'organization_id' => 44,
+    'organization_id' => 46,
     'course_id' => $courseid,
     'course_name' => $course_name1,
     'user_id' => $user_id1,
@@ -142,10 +155,10 @@ $proctorwidgetparams = [
     'user_name' => $user_name1,
 ];
 //print_r($attemptobj);exit;
-$PAGE->requires->js_call_amd('local_techstack/proctor_widget', 'init', [$proctorwidgetparams]);
+//$PAGE->requires->js_call_amd('local_techstack/proctor_widget', 'init', [$proctorwidgetparams]);
 
 
-
+}
 
 
 

@@ -107,5 +107,70 @@ function xmldb_local_techstack_upgrade($oldversion) {
 
 
 
+   if ($oldversion < 2025071531) {
+
+        $table = new xmldb_table('local_techstack_course');
+
+        // Fields.
+        $table->add_field(
+            'id',
+            XMLDB_TYPE_INTEGER,
+            '10',
+            null,
+            XMLDB_NOTNULL,
+            XMLDB_SEQUENCE,
+            null
+        );
+
+        $table->add_field(
+            'courseid',
+            XMLDB_TYPE_INTEGER,
+            '10',
+            null,
+            XMLDB_NOTNULL,
+            null,
+            null
+        );
+
+        $table->add_field(
+            'customtext',
+            XMLDB_TYPE_TEXT,
+            null,
+            null,
+            null,
+            null,
+            null
+        );
+
+        // Keys.
+        $table->add_key(
+            'primary',
+            XMLDB_KEY_PRIMARY,
+            ['id']
+        );
+        
+         $table->add_key(
+            'courseid',
+            XMLDB_KEY_UNIQUE,
+            ['courseid']
+        );
+
+        // Create table.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        // Savepoint.
+        upgrade_plugin_savepoint(
+            true,
+            2025071531,
+            'local',
+            'techstack'
+        );
+    }
+
+
+
+
     return true;
 }

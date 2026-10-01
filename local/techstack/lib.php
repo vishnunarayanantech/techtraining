@@ -157,4 +157,9 @@ function local_techstack_coursemodule_edit_post_actions($moduleinfo, $course) {
     // IMPORTANT:
     // Moodle expects the module information object back.
     return $moduleinfo;
+
 }
+
+
+
+

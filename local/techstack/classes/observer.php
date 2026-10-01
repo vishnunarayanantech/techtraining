@@ -1,6 +1,6 @@
 <?php
 
-namespace local_courseproctor;
+namespace local_techstack;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -31,7 +31,7 @@ class observer {
          * Build EXACT SAME session ID
          * that JavaScript used.
          */
-        $sessionid =
+ $sessionid =
             'moodle_' .
             $userid .
             '_' .
@@ -53,17 +53,26 @@ class observer {
     private static function close_external_session(
         string $sessionid
     ): void {
-
+	  global $COURSE, $CFG;
+	  require_once($CFG->dirroot . '/local/techstack/helper.php');
+	  //global $COURSE, $CFG;
+	  $customtext = local_techstack_get_course_customtext($COURSE->id);  
+if(!empty($customtext)){
          $proctorclosesessionparams = [
         'session_id_or_external' => $sessionid,
-        'organization_id' => 44,
-        'key_id' => 'KEY-93781AC',
+        'organization_id' => 46,
+        'key_id' => $customtext,
     ];
-    $proctorcurl = new curl();
+  /*  $proctorcurl = new \curl();
     $proctorcurl->setHeader('Content-Type: application/json');
     $proctorcurl->post('https://proctoring.api.techversantinfotech.com/proctor-client/session/close',
-            json_encode($proctorclosesessionparams));
-
-             
+	    json_encode($proctorclosesessionparams));*/
+    ?>
+<script>
+// window.proctorClient.endSession("proctor-widget-root");
+</script>
+<?php
+                                                     
+}        
     }
 }
