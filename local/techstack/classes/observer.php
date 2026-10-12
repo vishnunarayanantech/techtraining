@@ -60,16 +60,17 @@ class observer {
 if(!empty($customtext)){
          $proctorclosesessionparams = [
         'session_id_or_external' => $sessionid,
-        'organization_id' => 46,
+        'app_key' => '813cccb1-120a-415f-8eff-d235ae4801fa',
         'key_id' => $customtext,
     ];
-  /*  $proctorcurl = new \curl();
-    $proctorcurl->setHeader('Content-Type: application/json');
+    $proctorcurl = new \curl();
+	 $proctorcurl->setHeader('Content-Type: application/json');
+	 $proctorcurl->setHeader('x-api-key: 813cccb1-120a-415f-8eff-d235ae4801fa');
     $proctorcurl->post('https://proctoring.api.techversantinfotech.com/proctor-client/session/close',
-	    json_encode($proctorclosesessionparams));*/
+	    json_encode($proctorclosesessionparams));
     ?>
 <script>
-// window.proctorClient.endSession("proctor-widget-root");
+ window.proctorClient.endSession("proctor-widget-root");
 </script>
 <?php
                                                      

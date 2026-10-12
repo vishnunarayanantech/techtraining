@@ -144,7 +144,7 @@ $user_name1 = $USER->username;
 $proctorwidgetparams = [
     'key_id' => $customtext,
     'session_id' => $sessionid,
-    'organization_id' => 46,
+    'app_key' => '813cccb1-120a-415f-8eff-d235ae4801fa',
     'course_id' => $courseid,
     'course_name' => $course_name1,
     'user_id' => $user_id1,
@@ -155,7 +155,7 @@ $proctorwidgetparams = [
     'user_name' => $user_name1,
 ];
 //print_r($attemptobj);exit;
-//$PAGE->requires->js_call_amd('local_techstack/proctor_widget', 'init', [$proctorwidgetparams]);
+$PAGE->requires->js_call_amd('local_techstack/proctor_widget', 'init', [$proctorwidgetparams]);
 
 
 }
