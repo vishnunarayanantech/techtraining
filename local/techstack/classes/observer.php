@@ -15,9 +15,13 @@ class observer {
 
         /*
          * User who completed course.
+         *
+         * relateduserid is the user who completed the course. userid is
+         * whoever triggered the action, which can be a teacher/admin, or
+         * 0 when completion is aggregated by cron.
          */
         $userid =
-            (int)$event->userid;
+            (int)$event->relateduserid;
 
 
         /*
@@ -42,38 +46,81 @@ class observer {
          * Close external proctor session.
          */
         self::close_external_session(
-            $sessionid
+            $sessionid,
+            $courseid
         );
     }
 
 
     /**
      * Call external proctoring close API.
+     *
+     * This runs inside the request that completed the course, which can be
+     * an AJAX call (e.g. "Mark as done") whose response is JSON. So it must
+     * never output anything, and a proctoring API failure must never break
+     * course completion.
      */
     private static function close_external_session(
-        string $sessionid
+        string $sessionid,
+        int $courseid
     ): void {
-	  global $COURSE, $CFG;
-	  require_once($CFG->dirroot . '/local/techstack/helper.php');
-	  //global $COURSE, $CFG;
-	  $customtext = local_techstack_get_course_customtext($COURSE->id);  
-if(!empty($customtext)){
-         $proctorclosesessionparams = [
-        'session_id_or_external' => $sessionid,
-        'app_key' => 'bee923f2-9ceb-4dec-9d30-b937ca6bdf6f',
-        'key_id' => $customtext,
-    ];
-    $proctorcurl = new \curl();
-	 $proctorcurl->setHeader('Content-Type: application/json');
-	 $proctorcurl->setHeader('x-api-key: bee923f2-9ceb-4dec-9d30-b937ca6bdf6f');
-    $proctorcurl->post('https://proctoring.api.techversantinfotech.com/proctor-client/session/close',
-	    json_encode($proctorclosesessionparams));
-    ?>
-<script>
- window.proctorClient.endSession("proctor-widget-root");
-</script>
-<?php
-                                                     
-}        
+        global $CFG;
+
+        require_once($CFG->libdir . '/filelib.php');
+        require_once($CFG->dirroot . '/local/techstack/helper.php');
+
+        $customtext = local_techstack_get_course_customtext($courseid);
+
+        /*
+         * Course has no proctor key, nothing to close.
+         */
+        if (empty($customtext)) {
+            return;
+        }
+
+        $proctorclosesessionparams = [
+            'session_id_or_external' => $sessionid,
+            'app_key' => 'bee923f2-9ceb-4dec-9d30-b937ca6bdf6f',
+            'key_id' => $customtext,
+        ];
+
+        try {
+            $proctorcurl = new \curl();
+            $proctorcurl->setHeader('Content-Type: application/json');
+            $proctorcurl->setHeader('x-api-key: bee923f2-9ceb-4dec-9d30-b937ca6bdf6f');
+
+            /*
+             * Short timeouts: this is a blocking call inside the
+             * completion request.
+             */
+            $response = $proctorcurl->post(
+                'https://proctoring.api.techversantinfotech.com/proctor-client/session/close',
+                json_encode($proctorclosesessionparams),
+                [
+                    'CURLOPT_CONNECTTIMEOUT' => 3,
+                    'CURLOPT_TIMEOUT' => 5,
+                ]
+            );
+
+            /*
+             * curl::post() does not throw, it returns the error text
+             * instead, so check the result explicitly.
+             */
+            $info = $proctorcurl->get_info();
+            $httpcode = (int)($info['http_code'] ?? 0);
+
+            if ($proctorcurl->get_errno() || $httpcode < 200 || $httpcode >= 300) {
+                error_log(
+                    'local_techstack: closing proctor session ' . $sessionid .
+                    ' failed (curl errno ' . $proctorcurl->get_errno() .
+                    ', HTTP ' . $httpcode . '): ' . substr((string)$response, 0, 200)
+                );
+            }
+        } catch (\Throwable $e) {
+            error_log(
+                'local_techstack: closing proctor session ' . $sessionid .
+                ' threw: ' . $e->getMessage()
+            );
+        }
     }
 }
