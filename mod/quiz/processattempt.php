@@ -114,12 +114,12 @@ if ($status == quiz_attempt::OVERDUE) {
 if(!empty($custom_key)){	
 	$proctorclosesessionparams = [
         'session_id_or_external' => $attemptobj->get_attempt()->id,
-        'app_key' => '813cccb1-120a-415f-8eff-d235ae4801fa',
+        'app_key' => '669fb4ba-68b6-4b4a-9654-d4a5ea2d8bbc',
         'key_id' => $custom_key,
     ];
     $proctorcurl = new curl();
     $proctorcurl->setHeader('Content-Type: application/json');
-    $proctorcurl->setHeader('x-api-key: 813cccb1-120a-415f-8eff-d235ae4801fa');
+    $proctorcurl->setHeader('x-api-key: 669fb4ba-68b6-4b4a-9654-d4a5ea2d8bbc');
     $proctorcurl->post('https://proctoring.api.techversantinfotech.com/proctor-client/session/close',
 	    json_encode($proctorclosesessionparams));
 }
