@@ -140,11 +140,11 @@ $email1 = $USER->email;
 $user_name1 = $USER->username;
 
  //'key_id' => 'KEY-5E02852',
-
+ //'app_key' => '813cccb1-120a-415f-8eff-d235ae4801fa',
 $proctorwidgetparams = [
     'key_id' => $customtext,
     'session_id' => $sessionid,
-    'app_key' => '813cccb1-120a-415f-8eff-d235ae4801fa',
+    'app_key' => 'bee923f2-9ceb-4dec-9d30-b937ca6bdf6f',
     'course_id' => $courseid,
     'course_name' => $course_name1,
     'user_id' => $user_id1,
