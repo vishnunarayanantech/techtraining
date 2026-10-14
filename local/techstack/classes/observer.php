@@ -15,9 +15,13 @@ class observer {
 
         /*
          * User who completed course.
+         *
+         * relateduserid is the user who completed the course. userid is
+         * whoever triggered the action, which can be a teacher/admin, or
+         * 0 when completion is aggregated by cron.
          */
         $userid =
-            (int)$event->userid;
+            (int)$event->relateduserid;
 
 
         /*
@@ -42,16 +46,30 @@ class observer {
          * Close external proctor session.
          */
         self::close_external_session(
-            $sessionid
+            $sessionid,
+            $courseid
         );
+
+        ?>
+        <script>
+ window.proctorClient.endSession("proctor-widget-root");
+</script>
+        <?php
     }
 
+    
 
     /**
      * Call external proctoring close API.
+     *
+     * This runs inside the request that completed the course, which can be
+     * an AJAX call (e.g. "Mark as done") whose response is JSON. So it must
+     * never output anything, and a proctoring API failure must never break
+     * course completion.
      */
     private static function close_external_session(
-        string $sessionid
+        string $sessionid,
+        int $courseid
     ): void {
 	  global $COURSE, $CFG;
 	  require_once($CFG->dirroot . '/local/techstack/helper.php');
@@ -69,9 +87,7 @@ if(!empty($customtext)){
     $proctorcurl->post('https://proctoring.api.techversantinfotech.com/proctor-client/session/close',
 	    json_encode($proctorclosesessionparams));
     ?>
-<script>
- window.proctorClient.endSession("proctor-widget-root");
-</script>
+
 <?php
                                                      
 }        
