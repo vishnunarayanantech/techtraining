@@ -1,1 +1,5 @@
 /config.php
+
+# Vim temporary files
+*.swp
+*.swo
