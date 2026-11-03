@@ -159,12 +159,14 @@ $user_name1 = $USER->username;
 
  //'key_id' => 'KEY-5E02852',
  //'app_key' => '813cccb1-120a-415f-8eff-d235ae4801fa',
+ //'app_key' => 'bee923f2-9ceb-4dec-9d30-b937ca6bdf6f',
+
 
 
 $proctorwidgetparams = [
     'key_id' => $custom_key,
     'session_id' => $ses_key1,
-    'app_key' => '669fb4ba-68b6-4b4a-9654-d4a5ea2d8bbc',
+    'app_key' => 'a7f36847-ac8a-4844-ba18-5647dfe14984',
     'course_id' => $quiz_id1,
     'course_name' => $course_name1,
     'user_id' => $user_id1,
