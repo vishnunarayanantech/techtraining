@@ -110,19 +110,19 @@ if ($status == quiz_attempt::OVERDUE) {
     	'customtext',
     	['cmid' => $cmid_new]
 	);
-
+/*
 if(!empty($custom_key)){	
 	$proctorclosesessionparams = [
         'session_id_or_external' => $attemptobj->get_attempt()->id,
-        'app_key' => 'a7f36847-ac8a-4844-ba18-5647dfe14984',
+        'app_key' => 'f52441c8-7624-4741-a123-1d0450f6efab',
         'key_id' => $custom_key,
     ];
     $proctorcurl = new curl();
     $proctorcurl->setHeader('Content-Type: application/json');
-    $proctorcurl->setHeader('x-api-key: a7f36847-ac8a-4844-ba18-5647dfe14984');
+    $proctorcurl->setHeader('x-api-key: f52441c8-7624-4741-a123-1d0450f6efab');
     $proctorcurl->post('https://proctoring.api.techversantinfotech.com/proctor-client/session/close',
 	    json_encode($proctorclosesessionparams));
-}
+}*/
 
     redirect($attemptobj->review_url());
  }
