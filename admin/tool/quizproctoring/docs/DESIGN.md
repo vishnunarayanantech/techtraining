@@ -6,7 +6,7 @@ the vendor's behaviour is unverified (see `VENDOR_QUESTIONS.md`).
 ## What it does
 
 * A site administrator saves **one App Key** for the whole site. A **Key ID** ("Proctor Key") is entered in the settings
-  form of each quiz (section "Proctor Key Settings", quizzes only, site administrators only).
+  form of each quiz (section "Quiz Proctoring Key Setting", quizzes only, site administrators only).
 * A quiz attempt is proctored if, and only if, all of these hold: the integration switch is on, a usable App Key is saved,
   the quiz has a Key ID, the attempt belongs to the logged-in user, it is not a teacher preview, and it is in progress.
   **A quiz with no Key ID is never proctored.** Nothing else is consulted (see "Independence" below).

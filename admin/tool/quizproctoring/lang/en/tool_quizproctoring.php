@@ -68,7 +68,7 @@ $string['quizkey'] = 'Proctor Key';
 $string['quizkey_help'] = 'The proctoring Key ID of this quiz. Only quizzes that have a Key ID here are proctored; leave it empty for no proctoring. Letters, numbers, hyphens and underscores only.
 
 Proctoring also needs the App Key and the "Enable vendor integration" switch on the Quiz proctoring administration page. Only site administrators can see and change this field.';
-$string['quizkeyheader'] = 'Proctor Key Settings';
+$string['quizkeyheader'] = 'Quiz Proctoring Key Setting';
 $string['settingssavedoff'] = 'Settings saved. The vendor integration is still OFF, so no quiz is being proctored. Tick "Enable vendor integration" below and save to start.';
 $string['settingssavedon'] = 'Settings saved. The vendor integration is ON.';
 $string['settingssavedonwithoutkey'] = 'Settings saved, but the vendor integration is ON without a usable App Key, so nothing can be proctored. Enter the App Key.';

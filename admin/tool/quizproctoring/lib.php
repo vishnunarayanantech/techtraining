@@ -25,7 +25,7 @@
  */
 
 /**
- * Add the "Proctor Key Settings" section to the quiz settings form.
+ * Add the "Quiz Proctoring Key Setting" section to the quiz settings form.
  *
  * @param moodleform_mod $formwrapper The activity form being built.
  * @param MoodleQuickForm $mform The form's quick form.

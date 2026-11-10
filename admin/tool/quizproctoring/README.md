@@ -29,7 +29,7 @@ this drops the plugin's tables and the plugin settings and touches nothing else 
 ## Use
 
 1. Save the **App Key** (stored encrypted, never shown again, only a masked hint).
-2. As a site administrator, edit the quiz: in its settings form, section **Proctor Key Settings**, enter the
+2. As a site administrator, edit the quiz: in its settings form, section **Quiz Proctoring Key Setting**, enter the
    **Proctor Key**; leave it empty for no proctoring. Letters, digits,
    `-` and `_` only. It is stored per quiz (table `tool_quizproctoring_quiz`). Teachers do not see the field and a
    teacher's save never changes it. A duplicated or restored quiz does not get the Key ID of the original.

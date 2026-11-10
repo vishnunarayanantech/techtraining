@@ -39,11 +39,23 @@ final class quiz_key_form_test extends \advanced_testcase {
      * @return \mod_quiz_mod_form
      */
     private function real_quiz_form(\stdClass $course, \stdClass $quiz): \mod_quiz_mod_form {
+        return $this->real_activity_form('quiz', $course, $quiz);
+    }
+
+    /**
+     * The settings form of an existing activity of any type, built the way course/modedit.php builds it.
+     *
+     * @param string $modulename For example quiz, page or assign.
+     * @param \stdClass $course
+     * @param \stdClass $instance The activity as returned by the generator (has cmid).
+     * @return \moodleform_mod
+     */
+    private function real_activity_form(string $modulename, \stdClass $course, \stdClass $instance): \moodleform_mod {
         global $CFG, $PAGE;
         require_once($CFG->dirroot . '/course/modlib.php');
-        require_once($CFG->dirroot . '/mod/quiz/mod_form.php');
+        require_once($CFG->dirroot . '/mod/' . $modulename . '/mod_form.php');
 
-        $cm = get_coursemodule_from_id('quiz', $quiz->cmid, 0, false, MUST_EXIST);
+        $cm = get_coursemodule_from_id($modulename, $instance->cmid, 0, false, MUST_EXIST);
         [, , , $data, $cw] = get_moduleinfo_data($cm, $course);
         // The page (and so the theme) can only be set up once per test.
         if (!$this->pageready) {
@@ -52,7 +64,8 @@ final class quiz_key_form_test extends \advanced_testcase {
             $PAGE->set_context(\context_module::instance($cm->id));
             $this->pageready = true;
         }
-        return new \mod_quiz_mod_form($data, $cw->section, $cm, $course);
+        $class = 'mod_' . $modulename . '_mod_form';
+        return new $class($data, $cw->section, $cm, $course);
     }
 
     /**
@@ -87,7 +100,7 @@ final class quiz_key_form_test extends \advanced_testcase {
     }
 
     /**
-     * An administrator sees the "Proctor Key Settings" section in the real quiz settings form, with the saved Key ID.
+     * An administrator sees the "Quiz Proctoring Key Setting" section in the real quiz settings form, with the saved Key ID.
      */
     public function test_administrator_sees_the_field_in_the_real_quiz_form(): void {
         $this->resetAfterTest();
@@ -98,7 +111,7 @@ final class quiz_key_form_test extends \advanced_testcase {
         $form = $this->real_quiz_form($course, $quiz);
         $html = $form->render();
         $this->assertStringContainsString('name="' . quiz_key_form::FIELD . '"', $html);
-        $this->assertStringContainsString('Proctor Key Settings', $html);
+        $this->assertStringContainsString('Quiz Proctoring Key Setting', $html);
         $this->assertStringContainsString('Proctor Key', $html);
         $this->assertStringNotContainsString('value="KEY-SAVED"', $html);
 
@@ -121,10 +134,11 @@ final class quiz_key_form_test extends \advanced_testcase {
 
         $this->assertStringNotContainsString(quiz_key_form::FIELD, $html);
         $this->assertStringNotContainsString('Proctor Key', $html);
+        $this->assertStringNotContainsString('Quiz Proctoring Key Setting', $html);
     }
 
     /**
-     * The field is added to quizzes only.
+     * The section (title and field) is added to quizzes only.
      */
     public function test_other_activities_do_not_get_the_field(): void {
         $this->resetAfterTest();
@@ -134,9 +148,28 @@ final class quiz_key_form_test extends \advanced_testcase {
         quiz_key_form::add_elements($this->wrapper('assign'), $mform);
         quiz_key_form::add_elements($this->wrapper('page'), $mform);
         $this->assertFalse($mform->elementExists(quiz_key_form::FIELD));
+        $this->assertFalse($mform->elementExists(quiz_key_form::HEADER));
 
         quiz_key_form::add_elements($this->wrapper('quiz'), $mform);
         $this->assertTrue($mform->elementExists(quiz_key_form::FIELD));
+        $this->assertTrue($mform->elementExists(quiz_key_form::HEADER));
+    }
+
+    /**
+     * The real settings forms of a page and an assignment, opened by an administrator, show nothing of it.
+     */
+    public function test_real_forms_of_other_activities_show_nothing(): void {
+        $this->resetAfterTest();
+        $this->setAdminUser();
+        $course = $this->getDataGenerator()->create_course();
+        $page = $this->getDataGenerator()->create_module('page', ['course' => $course->id]);
+
+        $html = $this->real_activity_form('page', $course, $page)->render();
+
+        $this->assertStringContainsString('name="name"', $html, 'The form was really built');
+        $this->assertStringNotContainsString(quiz_key_form::FIELD, $html);
+        $this->assertStringNotContainsString('Quiz Proctoring Key Setting', $html);
+        $this->assertStringNotContainsString('Proctor Key', $html);
     }
 
     /**

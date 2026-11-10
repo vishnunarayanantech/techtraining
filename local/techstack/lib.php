@@ -5,7 +5,8 @@ defined('MOODLE_INTERNAL') || die();
 // DISABLED 2026-11-09 at the site owner's request: the "Proctor Key Settings" block of the QUIZ settings form
 // (course/modedit.php) is now provided by tool_quizproctoring (admin/tool/quizproctoring/lib.php), which is the only
 // source of quiz Proctor Keys. The three functions below are commented out, not deleted. Keys saved earlier stay in the
-// local_techstack table. The Proctor Key block of the COURSE settings page (classes/hook_callbacks.php) is not affected.
+// local_techstack table. The Proctor Key block of the COURSE settings page was switched off too on 2026-11-10 (see
+// db/hooks.php).
 //
 // /**
 //  * Add custom fields to the course module settings form.

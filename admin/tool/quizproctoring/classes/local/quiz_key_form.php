@@ -57,7 +57,7 @@ class quiz_key_form {
     }
 
     /**
-     * Add the "Proctor Key Settings" section to a quiz form.
+     * Add the "Quiz Proctoring Key Setting" section to a quiz form.
      *
      * @param object $formwrapper The moodleform_mod being built.
      * @param \MoodleQuickForm $mform
