@@ -45,14 +45,14 @@ class observer {
         /*
          * Close external proctor session.
          */
-        self::close_external_session(
+      /*  self::close_external_session(
             $sessionid,
             $courseid
-        );
+      );*/
 
         ?>
         <script>
- window.proctorClient.endSession("proctor-widget-root");
+ //window.proctorClient.endSession("proctor-widget-root");
 </script>
         <?php
     }

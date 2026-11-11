@@ -155,7 +155,7 @@ $proctorwidgetparams = [
     'user_name' => $user_name1,
 ];
 //print_r($attemptobj);exit;
-$PAGE->requires->js_call_amd('local_techstack/proctor_widget', 'init', [$proctorwidgetparams]);
+//$PAGE->requires->js_call_amd('local_techstack/proctor_widget', 'init', [$proctorwidgetparams]);
 
 
 }
