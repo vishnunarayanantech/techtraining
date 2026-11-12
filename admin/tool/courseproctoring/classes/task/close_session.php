@@ -1,0 +1,71 @@
+<?php
+// This file is part of Moodle - https://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
+
+namespace tool_courseproctoring\task;
+
+use tool_courseproctoring\local\close_service;
+
+/**
+ * Adhoc task that retries closing the vendor session of one learner in one course.
+ *
+ * Queued by the observers when the first, synchronous attempt fails in a retryable way. Moodle retries a failing adhoc
+ * task with exponential back-off (60 s doubling to 24 h, 12 attempts by default). On the last allowed attempt a retryable
+ * failure is recorded as final in the session ledger instead of throwing, so a session never stays "active" forever.
+ * Requires Moodle cron to be running.
+ *
+ * Only the id of the ledger row is stored in the task; the App Key, the Key ID and the session id are read from
+ * configuration and the ledger when the task runs.
+ *
+ * @package    tool_courseproctoring
+ * @copyright  2026 Techversant
+ * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+class close_session extends \core\task\adhoc_task {
+    /**
+     * Queue a retry for a ledger row (no duplicate if one is already queued).
+     *
+     * @param int $id The ledger row id.
+     */
+    public static function queue(int $id): void {
+        $task = new self();
+        $task->set_component('tool_courseproctoring');
+        $task->set_custom_data(['rowid' => $id]);
+        \core\task\manager::queue_adhoc_task($task, true);
+    }
+
+    #[\Override]
+    public function get_name(): string {
+        return get_string('task_closesession', 'tool_courseproctoring');
+    }
+
+    #[\Override]
+    public function execute(): void {
+        $data = $this->get_custom_data();
+        $id = (int) ($data->rowid ?? 0);
+        if ($id <= 0) {
+            return;
+        }
+
+        // The last allowed run records a retryable failure as final rather than throwing again.
+        $lastchance = $this->get_attempts_available() <= 1;
+        $outcome = (new close_service())->close_session($id, $lastchance);
+
+        if ($outcome === close_service::RETRY) {
+            // Throwing makes Moodle reschedule this task with back-off.
+            throw new \moodle_exception('closeretry', 'tool_courseproctoring', '', $id);
+        }
+    }
+}

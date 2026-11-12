@@ -10,7 +10,7 @@ All vendor-specific knowledge lives in a few classes so that answers can be appl
 * `classes/local/vendor/techversant_client.php` – URLs, header, request body, widget parameters, and the mapping from
   HTTP result to *success / retryable / permanent*.
 * `classes/local/http/http_client.php` – vendor-independent transport (timeouts, TLS, no redirects).
-* The session id logic is a single class, `classes/local/session_id.php` (added in a later build phase).
+* The session id logic is a single class, `classes/local/session_id.php`.
 
 ## What is known (from source code, not from vendor documentation)
 
@@ -80,11 +80,15 @@ code is assumed to mean "already closed".
 *Current behaviour:* the plugin keeps a ledger row per learner and course and treats a closed row as final: a finished
 session is not started again. A lost response can still cause one duplicate close request.
 
-### 7. Sessions left open when a course changes over to this plugin
-When a course that was proctored by another set-up starts using this plugin, learners who were mid-course get a **new**
-session (new id). Their earlier session is not touched by this plugin.
+### 7. Sessions left open
+A vendor session can be left open at the vendor in these cases:
+* a course that another set-up proctored changes over to this plugin: learners who were mid-course get a **new** session
+  (new id), and their earlier session is not touched by this plugin;
+* a course is deleted (this plugin removes its own records and does not call the vendor, so as not to slow the deletion down);
+* a user is deleted while the vendor cannot be reached;
+* a learner's enrolment ends by date (Moodle announces nothing).
 1. Do open sessions expire by themselves, and after how long?
-2. Can the vendor close a set of old sessions in bulk?
+2. Can the vendor close a set of sessions in bulk, for example all sessions of one Key ID?
 
 ### 8. Parameter semantics
 1. In the widget parameters, `course_id` is the **real Moodle course id** here. (Integrations that proctor quizzes send

@@ -26,9 +26,9 @@ namespace tool_courseproctoring;
  *  3. the code does not read source files, include files of other plugins or use classes of other plugins;
  *  4. every table the plugin creates is its own, and no query names a table of another plugin;
  *  5. every component name the code uses (settings, strings, classes) is this plugin's own;
- *  6. the folder holds no symbolic links that could lead outside it.
- *
- * Checks for the registrations in db/ (hooks, events, tasks, permissions) are added in the phase that adds those files.
+ *  6. the folder holds no symbolic links that could lead outside it;
+ *  7. everything registered in db/ (hooks, event observers, scheduled tasks, permissions) is this plugin's own, and what
+ *     it listens to belongs to Moodle core.
  *
  * @package    tool_courseproctoring
  * @copyright  2026 Techversant
@@ -244,5 +244,60 @@ final class independence_test extends \advanced_testcase {
             }
         }
         $this->assertSame([], $links);
+    }
+
+    /**
+     * 7. Everything the plugin registers in db/ (hooks, event observers, scheduled tasks, permissions) is the plugin's
+     * own, and it listens only to Moodle core.
+     */
+    public function test_registrations_belong_to_this_plugin(): void {
+        $own = self::COMPONENT . '\\';
+        $checked = 0;
+
+        if (file_exists(__DIR__ . '/../db/hooks.php')) {
+            $callbacks = [];
+            require(__DIR__ . '/../db/hooks.php');
+            foreach ($callbacks as $entry) {
+                $hook = ltrim($entry['hook'], '\\');
+                $message = 'a hook of another plugin: ' . $hook;
+                $this->assertMatchesRegularExpression('/^core(_[a-z0-9]+)?\\\\hook\\\\/', $hook, $message);
+                $class = ltrim(is_array($entry['callback']) ? $entry['callback'][0] : $entry['callback'], '\\');
+                $this->assertStringStartsWith($own, $class, 'a callback that is not this plugin\'s own');
+                $checked++;
+            }
+        }
+
+        if (file_exists(__DIR__ . '/../db/events.php')) {
+            $observers = [];
+            require(__DIR__ . '/../db/events.php');
+            foreach ($observers as $entry) {
+                $event = ltrim($entry['eventname'], '\\');
+                $message = 'an event of another plugin: ' . $event;
+                $this->assertMatchesRegularExpression('/^core(_[a-z0-9]+)?\\\\event\\\\/', $event, $message);
+                $class = ltrim(is_array($entry['callback']) ? $entry['callback'][0] : $entry['callback'], '\\');
+                $this->assertStringStartsWith($own, $class, 'an observer that is not this plugin\'s own');
+                $checked++;
+            }
+        }
+
+        if (file_exists(__DIR__ . '/../db/tasks.php')) {
+            $tasks = [];
+            require(__DIR__ . '/../db/tasks.php');
+            foreach ($tasks as $entry) {
+                $this->assertStringStartsWith($own, ltrim($entry['classname'], '\\'), 'a task that is not this plugin\'s own');
+                $checked++;
+            }
+        }
+
+        if (file_exists(__DIR__ . '/../db/access.php')) {
+            $capabilities = [];
+            require(__DIR__ . '/../db/access.php');
+            foreach (array_keys($capabilities) as $capability) {
+                $this->assertStringStartsWith('tool/courseproctoring:', $capability, 'a permission of another plugin');
+                $checked++;
+            }
+        }
+
+        $this->assertGreaterThan(0, $checked, 'the registrations were found');
     }
 }

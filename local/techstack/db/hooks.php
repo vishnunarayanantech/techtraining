@@ -4,16 +4,22 @@ defined('MOODLE_INTERNAL') || die();
 
 $callbacks = [
 
-    [
-        'hook' =>
-            \core\hook\output\before_standard_footer_html_generation::class,
-
-        'callback' =>
-            [
-                \local_techstack\hook\output\before_standard_footer_html_generation::class,
-                'callback'
-            ],
-    ],
+    // DISABLED 2026-11-12 at the site owner's request: local_techstack no longer does any proctoring (course or quiz).
+    // This was the page-footer hook of the old course proctoring (see classes/hook/output/before_standard_footer_html_generation.php).
+    // Proctoring is now done only by tool_quizproctoring (quizzes) and tool_courseproctoring (courses).
+    // Nothing is deleted: the entry is kept below as comments, so it can be read, or switched on again.
+    // The note from 2026-11-10 further down says this footer hook is not changed: that was true then, it is not true any more.
+    //
+    //     [
+    //         'hook' =>
+    //             \core\hook\output\before_standard_footer_html_generation::class,
+    //
+    //         'callback' =>
+    //             [
+    //                 \local_techstack\hook\output\before_standard_footer_html_generation::class,
+    //                 'callback'
+    //             ],
+    //     ],
 
     // DISABLED 2026-11-10 at the site owner's request: the "Proctor Key Settings" / "Proctor Key" block of the COURSE
     // settings page (course/edit.php) is switched off, so that the Proctor Key can be entered only in the QUIZ settings
