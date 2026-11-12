@@ -102,6 +102,22 @@ A vendor session can be left open at the vendor in these cases:
    than one that runs during a quiz.
 3. How can a learner's data be exported or deleted on request? (Moodle privacy requests only cover Moodle's own data.)
 
+### 10. A widget that is still running when its session is closed
+When a learner completes the course, this plugin closes the session through `session/close` (from the server), and then the
+learner's page stops the widget with `endSession()` (from 0.9.1). In the short moment between the two, the widget can still
+send a message (a frame, or the 18-second "ping-test") for a session that is already closed. A test on 2026-11-12 (before
+0.9.1) showed the pop-up "Error: Session not initialized. Please start session.", which the widget shows for any `socket_error`
+the service sends, followed by a redirect to `redirect_url`.
+1. Is that the message the service sends for a message on a closed session? Can it send a quiet "session closed" instead of an
+   error, or can the widget stop by itself when it receives one?
+2. Is it better for the widget to be stopped (`endSession()`) **before** `session/close` is called? (The server cannot do that
+   without knowing in the browser first; today the page stops the widget right after.)
+3. Does `endSession()` tell the service anything, or does it only unmount the widget? (In the bundle read on 2026-11-12 it only
+   unmounts the widget, stops screen sharing and clears the widget's state; the socket is closed when the widget unmounts.)
+
+*Current behaviour:* the server closes the session first, then the page stops the widget. Which message the learner sees, if
+any, in that moment is unconfirmed; test 7b in `MANUAL_TEST_SHEET.md` records it.
+
 ## Switching the integration on
 
 Do **not** enable "Enable vendor integration" on a production site until questions 1 to 6 above have written answers and

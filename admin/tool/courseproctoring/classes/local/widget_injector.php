@@ -91,7 +91,9 @@ class widget_injector {
         );
 
         $url = $this->vendor->get_widget_script_url(config::get_app_key(), $context);
-        $page->requires->js_call_amd('tool_courseproctoring/proctor_widget', 'init', [$url]);
+        // The course id lets the page script ask, after "Mark as done", whether proctoring is over
+        // (see external\is_proctoring_over).
+        $page->requires->js_call_amd('tool_courseproctoring/proctor_widget', 'init', [$url, (int) $course->id]);
 
         return $decision;
     }

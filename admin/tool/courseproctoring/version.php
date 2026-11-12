@@ -28,7 +28,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'tool_courseproctoring';
-$plugin->release = '0.9.0';
-$plugin->version = 2026111102;
+$plugin->release = '0.9.1';
+$plugin->version = 2026111200;
 $plugin->requires = 2024100700; // Moodle 4.5.0.
 $plugin->maturity = MATURITY_BETA;

@@ -160,16 +160,48 @@ class course_gate {
     }
 
     /**
+     * Whether proctoring is over for a person in a course: the session this plugin started for them has ended (closed,
+     * or given up on), or they have completed the course.
+     *
+     * Asked by the page script of a learner whose widget is running (see the external function
+     * {@see \tool_courseproctoring\external\is_proctoring_over}), right after they mark an activity as done, to know
+     * whether to stop the widget. It answers from the same two facts that {@see self::evaluate()} uses for its rules 7 and 8,
+     * so a page that would no longer start the widget is a page whose running widget is stopped.
+     *
+     * @param int $userid
+     * @param int $courseid
+     * @return bool
+     */
+    public function is_over(int $userid, int $courseid): bool {
+        $session = $this->sessions->get($userid, $courseid);
+        if ($session && (int) $session->status !== session_repository::STATUS_ACTIVE) {
+            return true;
+        }
+        return $this->is_course_complete($userid, $courseid);
+    }
+
+    /**
      * Whether the person has completed the course. Always false in a course without completion tracking.
      *
      * @param course_facts $facts
      * @return bool
      */
     private function has_completed(course_facts $facts): bool {
+        return $this->is_course_complete($facts->userid, $facts->courseid);
+    }
+
+    /**
+     * Whether a person has completed a course. Always false in a course without completion tracking.
+     *
+     * @param int $userid
+     * @param int $courseid
+     * @return bool
+     */
+    private function is_course_complete(int $userid, int $courseid): bool {
         global $CFG;
         require_once($CFG->libdir . '/completionlib.php');
 
-        $completion = new \completion_info(get_course($facts->courseid));
-        return $completion->is_enabled() && $completion->is_course_complete($facts->userid);
+        $completion = new \completion_info(get_course($courseid));
+        return $completion->is_enabled() && $completion->is_course_complete($userid);
     }
 }

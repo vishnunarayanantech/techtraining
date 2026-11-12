@@ -373,6 +373,95 @@ final class course_gate_test extends \advanced_testcase {
     }
 
     /**
+     * Proctoring is over for a learner whose session has ended or who has completed the course, and only then.
+     */
+    public function test_is_over(): void {
+        $data = $this->setup_course();
+        $gate = new course_gate();
+        $repo = new session_repository();
+        $userid = (int) $data->user->id;
+        $courseid = (int) $data->course->id;
+
+        $this->assertFalse($gate->is_over($userid, $courseid), 'nothing has started');
+        $session = $repo->ensure_started($userid, $courseid, 'KEY-COURSE');
+        $this->assertFalse($gate->is_over($userid, $courseid), 'a running session');
+
+        $this->complete_course($userid, $courseid);
+        $this->assertTrue($gate->is_over($userid, $courseid), 'completed, the session not yet closed');
+
+        $repo->mark_closed($session->id);
+        $this->assertTrue($gate->is_over($userid, $courseid), 'completed and closed');
+    }
+
+    /**
+     * A session that is closed or failed is over, completed or not, and one person's state is not another's.
+     */
+    public function test_is_over_for_finished_sessions(): void {
+        $data = $this->setup_course();
+        $gate = new course_gate();
+        $repo = new session_repository();
+        $courseid = (int) $data->course->id;
+        $second = $this->getDataGenerator()->create_and_enrol($data->course, 'student');
+        $third = $this->getDataGenerator()->create_and_enrol($data->course, 'student');
+
+        $repo->mark_closed($repo->ensure_started($data->user->id, $courseid, 'KEY-COURSE')->id);
+        $repo->mark_failed($repo->ensure_started($second->id, $courseid, 'KEY-COURSE')->id, 'HTTP 400');
+        $repo->ensure_started($third->id, $courseid, 'KEY-COURSE');
+
+        $this->assertTrue($gate->is_over((int) $data->user->id, $courseid), 'closed');
+        $this->assertTrue($gate->is_over((int) $second->id, $courseid), 'failed');
+        $this->assertFalse($gate->is_over((int) $third->id, $courseid), 'still running');
+        $elsewhere = $this->getDataGenerator()->create_course(['enablecompletion' => 1]);
+        $this->assertFalse($gate->is_over((int) $data->user->id, (int) $elsewhere->id), 'another course');
+    }
+
+    /**
+     * A course without completion tracking is never completed.
+     */
+    public function test_is_over_without_completion_tracking(): void {
+        $data = $this->setup_course(['completion' => false]);
+        $this->complete_course($data->user->id, $data->course->id);
+
+        $this->assertFalse((new course_gate())->is_over((int) $data->user->id, (int) $data->course->id));
+    }
+
+    /**
+     * What is_over() says always agrees with the rules: it is true exactly when the rules would refuse to start the widget
+     * because the session ended or the course is completed.
+     */
+    public function test_is_over_agrees_with_the_rules(): void {
+        $this->resetAfterTest();
+        $this->enable_integration();
+        $gate = new course_gate();
+        $repo = new session_repository();
+        $states = ['nothing started', 'running', 'running, completed', 'completed, never started', 'closed', 'failed'];
+
+        foreach ($states as $state) {
+            $data = $this->create_proctored_course();
+            $userid = (int) $data->user->id;
+            $courseid = (int) $data->course->id;
+            $session = in_array($state, ['nothing started', 'completed, never started'], true)
+                ? null : $repo->ensure_started($userid, $courseid, 'KEY-COURSE');
+            if (str_contains($state, 'completed')) {
+                $this->complete_course($userid, $courseid);
+            }
+            if ($state === 'closed') {
+                $repo->mark_closed($session->id);
+            }
+            if ($state === 'failed') {
+                $repo->mark_failed($session->id, 'HTTP 400');
+            }
+
+            $reason = $gate->evaluate($this->facts_for($data))->reason;
+            $this->assertSame(
+                in_array($reason, [course_gate::SESSION_ENDED, course_gate::COURSE_COMPLETE], true),
+                $gate->is_over($userid, $courseid),
+                $state . ' (the rules say: ' . $reason . ')'
+            );
+        }
+    }
+
+    /**
      * A stored session id that this plugin did not make is not used.
      */
     public function test_an_invalid_stored_session_id(): void {

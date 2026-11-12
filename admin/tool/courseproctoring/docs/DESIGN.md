@@ -119,6 +119,29 @@ The vendor sees one session per learner per course, and the session id is how it
 | The **Proctor Key is removed** from a course | The widget stops appearing on new page views. Sessions already running are not closed by this. |
 | The **switch is turned off** | The widget stops. Sessions that were started are still closed when their learner completes or leaves the course. |
 
+### Stopping the widget on the page (0.9.1)
+
+Closing the session at the vendor is done by the server. The widget in the learner's browser is a separate thing: it keeps
+sending to its session until the page is left. If a learner completes the course on the page they are looking at (the
+"Mark as done" button), the vendor would answer the still-running widget with an error about a session that is not there.
+
+So the page script (`amd/src/proctor_widget.js`) listens for Moodle's own `core_course:manualcompletiontoggled` event. When an
+activity was marked **as done** (not un-marked) it asks the server, with the external function
+`tool_courseproctoring_is_proctoring_over` (`classes/external/is_proctoring_over.php`), whether proctoring is over for this
+learner in this course. The answer comes from `course_gate::is_over()`: yes if the learner's ledger session is closed or failed,
+or the learner has completed the course (the same two facts that rules 7 and 8 of the gate use). Only if the answer is yes does
+the script call the vendor's `endSession()`, which unmounts the widget, stops screen sharing and clears the widget's own state.
+
+* The function answers only about the person who asks, reads only, writes nothing, and is callable from the page only (it is in
+  no web service).
+* A failed call (network, expired login) changes nothing: the widget keeps running and the next page decides.
+* Marking an activity as done that does **not** finish the course leaves the widget running.
+* Order of events on the click: the server saves the completion and closes the vendor session, the answer comes back to the
+  page, the page asks the function, the page stops the widget. In that short moment (well under a second) a message from the
+  widget to the vendor can still reach a closed session; see question 10 in `VENDOR_QUESTIONS.md`.
+* Only the page where the learner clicked is stopped. A second tab of the same course keeps its widget until it is reloaded or
+  left; when it loads a page again the rules refuse to start the widget (session ended).
+
 Closing a session (`close_service`): serialised with a lock, only for a ledger row that is still active; the outcome is
 written to the ledger (`closed`, `failed`, or still `active` with the number of failed tries and a short note without keys).
 **Success** = the vendor answers 2xx. **Permanent failure** = any other answer except those listed next (no retry).
@@ -154,6 +177,7 @@ rows. The table of Proctor Keys holds no personal data. Moodle cannot reach what
 * Event observers (`db/events.php`): `course_completed`, `user_enrolment_deleted`, `user_enrolment_updated`, `user_deleted`
   (these four run after the database transaction has committed) and `course_deleted`.
 * Permission (`db/access.php`), one adhoc task (`classes/task/close_session.php`).
+* One external function for the page script (`db/services.php`): `tool_courseproctoring_is_proctoring_over` (0.9.1).
 
 ## Known limits of version 1
 
@@ -162,6 +186,8 @@ rows. The table of Proctor Keys holds no personal data. Moodle cannot reach what
 * Quiz pages are never proctored by this plugin, and there is no setting to change that.
 * No page that lists sessions. The ledger can be read in the database (see `MANUAL_TEST_SHEET.md`).
 * Vendor sessions can be left open at the vendor when a course or user is deleted, or an enrolment ends by date.
+* The widget is stopped only on the page where the learner pressed "Mark as done". Completing the course another way (cron,
+  a teacher, a grade) closes the vendor session on the server, but a page that is already open keeps its widget until it is left.
 * The vendor questions in `VENDOR_QUESTIONS.md` are still open.
 
 ## Tests

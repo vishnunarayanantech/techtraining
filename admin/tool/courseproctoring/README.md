@@ -2,8 +2,13 @@
 
 A Moodle admin tool that proctors learners while they study a course, using the Techversant proctoring service.
 
-**Version 0.9.0 (beta).** Everything is built and tested locally with a fake vendor. It has **not** yet been tested by a
+**Version 0.9.1 (beta).** Everything is built and tested locally with a fake vendor. It has **not** yet been tested by a
 person with the real proctoring widget: do that with `docs/MANUAL_TEST_SHEET.md` before relying on it.
+
+**New in 0.9.1:** when a learner completes the course by pressing "Mark as done", the page now stops the running widget with
+the vendor's own `endSession()` (right after the server has closed the session). Before, the widget kept running against a
+session that no longer existed, and the vendor could answer it with an error pop-up. Nothing else changed: same rules, same
+tables, same settings.
 
 ## How it works
 
@@ -12,6 +17,7 @@ person with the real proctoring widget: do that with `docs/MANUAL_TEST_SHEET.md`
 3. When an enrolled learner opens any page of such a course (never a quiz page), the vendor's proctoring widget starts. The
    learner has **one session for the whole course**, whatever they open and however often they come back.
 4. The session is closed at the vendor when the learner completes the course, or is un-enrolled or suspended, or is deleted.
+   When the learner completes the course with "Mark as done", the widget on that page is also stopped.
 
 Administrators, teachers, visitors, guests, people "logged in as" a learner and people who switched role are never proctored.
 
@@ -85,6 +91,7 @@ Coding style: `phpcs --standard=moodle`. The tests never contact the real vendor
 | `classes/local/http/`, `classes/local/vendor/` | Vendor-independent HTTP transport, and everything vendor-specific |
 | `classes/event/` | Audit events (never contain a key) |
 | `classes/privacy/provider.php` | Privacy API |
-| `amd/src/proctor_widget.js`, `amd/build/` | The JavaScript that starts the widget (built with Moodle's grunt) |
-| `db/` | `install.xml`, `upgrade.php`, `access.php`, `hooks.php`, `events.php` |
+| `amd/src/proctor_widget.js`, `amd/build/` | The JavaScript that starts the widget, and stops it when the course is completed (built the way Moodle's grunt builds it) |
+| `classes/external/is_proctoring_over.php`, `db/services.php` | The one function the page script calls after "Mark as done" to ask whether proctoring is over |
+| `db/` | `install.xml`, `upgrade.php`, `access.php`, `hooks.php`, `events.php`, `services.php` |
 | `tests/` | PHPUnit tests, including `independence_test.php`, which enforces the stand-alone rule |

@@ -112,6 +112,11 @@ final class widget_injector_test extends \advanced_testcase {
         $calls = $this->widget_calls($page);
         $this->assertCount(1, $calls);
         $this->assertStringContainsString('amd.init(', $calls[0]);
+        $this->assertMatchesRegularExpression(
+            '/amd\.init\(".+", ' . (int) $data->course->id . '\)/',
+            $calls[0],
+            'the course id follows the address'
+        );
 
         $session = (new session_repository())->get($data->user->id, $data->course->id);
         $this->assertNotNull($session);

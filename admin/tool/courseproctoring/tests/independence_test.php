@@ -27,8 +27,8 @@ namespace tool_courseproctoring;
  *  4. every table the plugin creates is its own, and no query names a table of another plugin;
  *  5. every component name the code uses (settings, strings, classes) is this plugin's own;
  *  6. the folder holds no symbolic links that could lead outside it;
- *  7. everything registered in db/ (hooks, event observers, scheduled tasks, permissions) is this plugin's own, and what
- *     it listens to belongs to Moodle core.
+ *  7. everything registered in db/ (hooks, event observers, scheduled tasks, permissions, external functions) is this
+ *     plugin's own, and what it listens to belongs to Moodle core.
  *
  * @package    tool_courseproctoring
  * @copyright  2026 Techversant
@@ -285,6 +285,18 @@ final class independence_test extends \advanced_testcase {
             require(__DIR__ . '/../db/tasks.php');
             foreach ($tasks as $entry) {
                 $this->assertStringStartsWith($own, ltrim($entry['classname'], '\\'), 'a task that is not this plugin\'s own');
+                $checked++;
+            }
+        }
+
+        if (file_exists(__DIR__ . '/../db/services.php')) {
+            $functions = [];
+            require(__DIR__ . '/../db/services.php');
+            foreach ($functions as $name => $entry) {
+                $this->assertStringStartsWith(self::COMPONENT . '_', $name, 'an external function of another plugin');
+                $class = ltrim($entry['classname'], '\\');
+                $this->assertStringStartsWith($own, $class, 'a function class that is not this plugin\'s own');
+                $this->assertArrayNotHasKey('services', $entry, 'the function is not added to any web service');
                 $checked++;
             }
         }
